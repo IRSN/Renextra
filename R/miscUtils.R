@@ -168,6 +168,7 @@ allPeriods.Rendata <- function(object, ...) {
     dfPeriods
 }
 
+## ****************************************************************************
 
 ##' Gather the different types of observations described in the
 ##' \code{Renouv} object \code{object} and related \emph{plotting
@@ -186,6 +187,10 @@ allPeriods.Rendata <- function(object, ...) {
 ##' @param object An object with class \code{"Rendata"}.
 ##'
 ##' @param byBlockStyle A named list with logical elements.
+##'
+##' @param posOptions A list of options for the computations of the
+##'     plotting positions i.e. of optional arguments to be passed to
+##'     \code{\link[Renext]{SandT}}.
 ##'
 ##' @param ... Not used yet.
 ##' 
@@ -223,6 +228,7 @@ allPeriods.Rendata <- function(object, ...) {
 ##' 
 allObs.Renouv <- function(object,
                           byBlockStyle = NULL,
+                          posOptions = NULL,
                           ...) {
     
     ## After this, 'byBlockStyle' is a list with both elements "MAX" and "OTS"
@@ -252,8 +258,14 @@ allObs.Renouv <- function(object,
     ## =========================================================================
     ## Compute the plotting positions for the "points".
     ## =========================================================================
+
+    if (is.null(posOptions)) {
+        ST <- SandT(object)
+    } else {
+        parList <- c(list(object = object), posOptions)
+        ST <- do.call(SandT, parList)
+    }
     
-    ST <- SandT(object)
     dfST <- data.frame(Period = ST$T,
                        Quantile = ST$x,
                        Group = ST$groupNames[ST$group])
@@ -298,7 +310,7 @@ allObs.Renouv <- function(object,
     ## \code{MAX} data.
     ## =========================================================================
 
-    print(byBlockStyle)
+    ## print(byBlockStyle)
     
     Levs <- character(0)
 
@@ -308,19 +320,24 @@ allObs.Renouv <- function(object,
     
     if (!byBlockStyle[["MAX"]]) {
         Levs <- c(Levs, "MAX")
+        dfST$Group <- gsub("MAX.*$", "MAX", dfST$Group)
+        dfSeg$Group <- gsub("MAX.*$", "MAX", dfSeg$Group)
     } else {
         Lev1 <- dfST$Group
         Levs <- c(Levs, sort(unique(Lev1[grep("MAX", Lev1)])))
     }
     
     if (!byBlockStyle[["OTS"]]) {
-        Levs <- c(Levs, "MAX")
+        Levs <- c(Levs, "OTS")
+        dfST$Group <- gsub("OTS.*$", "OTS", dfST$Group)
+        dfSeg$Group <- gsub("OTS.*$", "OTS", dfSeg$Group)
     } else {
         Lev1 <- dfST$Group
         Levs <- c(Levs, sort(unique(Lev1[grep("OTS", Lev1)])))
     }
-    print(Levs)
     
+    ## print(Levs)
+
     dfST <- within(dfST, Group <- factor(Group, levels = Levs))
     dfSeg <- within(dfSeg, Group <- factor(Group))
     

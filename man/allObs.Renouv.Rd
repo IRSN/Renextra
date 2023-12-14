@@ -5,12 +5,16 @@
 \title{Retrieve All Observations of a \code{Rendata} object as
     Rows of a single Data Frame}
 \usage{
-allObs.Renouv(object, byBlockStyle = NULL, ...)
+allObs.Renouv(object, byBlockStyle = NULL, posOptions = NULL, ...)
 }
 \arguments{
 \item{object}{An object with class \code{"Rendata"}.}
 
 \item{byBlockStyle}{A named list with logical elements.}
+
+\item{posOptions}{A list of options for the computations of the
+plotting positions i.e. of optional arguments to be passed to
+\code{\link[Renext]{SandT}}.}
 
 \item{...}{Not used yet.}
 }

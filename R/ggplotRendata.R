@@ -118,3 +118,5 @@ autoplot.Rendata <- function(object,
     g
 
 }
+
+ 
