@@ -9,6 +9,7 @@
   level = 0.95,
   which = c("quant", "conf", "allObs", "emptyOTS"),
   posOptions = NULL,
+  byBlockStyle = TRUE,
   ...
 )
 }

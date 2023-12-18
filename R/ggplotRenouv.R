@@ -49,6 +49,9 @@
 ##'
 ##' @method autoplot Renouv
 ##' @export
+##'
+##' @importFrom stats coef predict
+##' @importFrom ggnewscale new_scale_colour new_scale_colour
 ##' 
 ##' @examples
 ##' example(Renouv, ask = FALSE, echo = FALSE)
@@ -62,6 +65,9 @@ autoplot.Renouv <- function(object,
                             byBlockStyle = NULL,
                             ...) {
 
+    Period <- Quantile <- U <- L <- Group <- Level <- NULL
+    x <- xend <- y <- yend <- NULL
+    
     if (length(level) > 2) {
         stop("the number of confidence levels must be <= 2")
     }
@@ -114,9 +120,9 @@ autoplot.Renouv <- function(object,
     }
     
     if (isTRUE(show$allObs)) {
-        if (require(ggnewscale)) {
-            g <- g + new_scale_fill() 
-        }
+       
+        g <- g + ggnewscale::new_scale_fill() 
+        
         g <- g + geom_point(data = L$dfST,
                             mapping = aes(x = Period, y = Quantile,
                                           shape = Group, col = Group,
@@ -131,7 +137,8 @@ autoplot.Renouv <- function(object,
     g <- g + geom_hline(yintercept = object$threshold)
 
     if (isTRUE(show$allObs) && nrow(L$dfSeg)) {
-        g <- g + new_scale_colour() 
+       
+        g <- g + ggnewscale::new_scale_colour() 
         g <- g + geom_segment(data = L$dfSeg,
                               mapping = aes(x = x, xend = xend,
                                             y = y, yend = yend,
@@ -202,8 +209,12 @@ autolayer.Renouv <- function(object,
                              level = 0.95,
                              which = c("quant", "conf", "allObs", "emptyOTS"),
                              posOptions = NULL,
+                             byBlockStyle = TRUE,
                              ...) {
 
+    Period <- Quantile <- U <- L <- Group <- Level <- NULL
+    x <- xend <- y <- yend <- NULL
+ 
     which <- match.arg(which)
     periods <- as.vector(outer(c(1, 2, 3, 5, 7), c(1, 10, 100, 1000)))
 

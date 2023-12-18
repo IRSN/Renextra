@@ -24,6 +24,8 @@ rEGPD3(n = 1L, scale = 1, shape = 0, kappa = 1)
 
 \item{log}{Logical. If \code{TRUE} the log-density is returned.}
 
+\item{q}{Vector of quantiles.}
+
 \item{lower.tail}{Logical. If \code{TRUE} (default) the
 probabilities are \eqn{\textrm{Pr}[X \leq x]}{Pr[X <= x]} and
 \eqn{\textrm{Pr}[X > x]}{Pr[X > x]} otherwise.}

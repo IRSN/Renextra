@@ -10,6 +10,15 @@
 \item{object}{An object with class \code{"RenouvTList"} as created
 by using \code{\link{RenouvTList}}.}
 
+\item{reParam}{Logical. Can only be used when the distribution is
+\code{"GPD"}. If \code{TRUE} the GPD scale parameter
+\eqn{\sigma} is replaced by the modified scale
+\eqn{\sigma^\star := \sigma - u \xi}, where \eqn{u} is the
+threshold and \eqn{\xi} is the GPD shape. The parameter
+\eqn{\sigma^\star} does not depend on the threshold. Remind
+that the distribution is specified by using the
+\code{distname.y} argument of the creator \code{RenouvTList}.}
+
 \item{...}{Not used yet.}
 }
 \value{

@@ -4,9 +4,11 @@ Title: Extra Functions and Objects for Renext
 Version: 0.1.0
 Author: Yves Deville
 Maintainer: Yves Deville <deville.yves@alpestat.com>
-Description: Extra functions and objects to be used with the Renext package
-    ggplot
-Depends: utils, Renext, ggplot2, ggnewscale, data.table
+Description: Extra functions, methods and and objects to be used with
+    the Renext package. These allow the use of ggplot graphics and to
+    assess the impact of the POT threshold choice.
+Depends: utils, Renext, ggplot2, data.table, ggnewscale
+Imports: tidyr
 License: GPL-2 
 Encoding: UTF-8
 LazyData: true

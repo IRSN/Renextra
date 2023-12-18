@@ -9,6 +9,12 @@
 \arguments{
 \item{object}{An object with class \code{"RenouvTList"}.}
 
+\item{newdata}{A vector containing the periods at which the return
+levels are to be computed. If missing a default choice is
+made.}
+
+\item{level}{The confidence level.}
+
 \item{...}{Further arguments to be passed to \code{predict}.}
 }
 \value{

@@ -27,6 +27,8 @@
 ##'
 ##' @param p Vector of probabilities.
 ##'
+##' @param q Vector of quantiles.
+##'
 ##' @param n Number of observations.
 ##'
 ##' @param scale,shape GPD-like scale and shape parameters. 
@@ -86,7 +88,10 @@ qEGPD3 <-  function(p, scale = 1.0, shape = 0.0, kappa = 1.0) {
 
 ##' @export
 ##' @rdname EGPD3
+##' @importFrom stats runif
+##' 
 rEGPD3 <- function(n = 1L, scale = 1.0, shape = 0.0, kappa = 1.0) {
+    U <- runif(n)
     qEGPD3(U, scale = scale, shape = shape, kappa = kappa)
 }
 

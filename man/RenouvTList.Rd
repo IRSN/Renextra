@@ -4,7 +4,14 @@
 \alias{RenouvTList}
 \title{\code{Renouv} or POT Models with several Thresholds}
 \usage{
-RenouvTList(x, threshold = NULL, effDuration = NULL, distname.y = "GPD", ...)
+RenouvTList(
+  x,
+  threshold = NULL,
+  effDuration = NULL,
+  distname.y = "GPD",
+  loopIni = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A numeric vector or a suitable \code{Rendata} object, see
@@ -15,12 +22,15 @@ RenouvTList(x, threshold = NULL, effDuration = NULL, distname.y = "GPD", ...)
 \item{effDuration, distname.y}{Effective duration and distribution
 See \code{\link{Renouv}}.}
 
+\item{loopIni}{Logical. If \code{TRUE} the initial values of the
+parameters for a threshold are derived from the known
+converged cases obtained before. This is mainy useful in the
+cas where historical data are used, because no convergence
+problems should arise as long as no historical/censored
+observations are used. \bold{NOT IMPLEMENTED YET}.}
+
 \item{...}{Further arguments to be passed to
 \code{\link{Renouv}}. Graphical arguments should not be used.}
-
-\item{loopIni}{Logical. If \code{TRUE} the initial values are This
-is because no convergence problems should arise as long as no
-historical/censored observations are used.}
 }
 \value{
 An object with (S3) class \code{"RenouvTList"}. This S3
@@ -51,9 +61,15 @@ fit <- RenouvTList(Garonne,
 
 methods(class = "RenouvTList")
 autoplot(predict(fit))
-fitJit <- RenouvTList(GaronneJit,
-                      threshold = seq(from = 2401, to = 3001, by = 100),
-                      distname.y = "GPD")
-autoplot(predict(fitJit))
+autoplot(coSd(fit))
 
+## Use more thresholds and compare with the jittered data
+fit <- RenouvTList(Garonne,
+                   threshold = seq(from = 2401, to = 3001, by = 10),
+                   distname.y = "GPD")
+autoplot(coSd(fit))
+fitJit <- RenouvTList(GaronneJit,
+                      threshold = seq(from = 2401, to = 3001, by = 10),
+                      distname.y = "GPD")
+autoplot(coSd(fitJit))
 }

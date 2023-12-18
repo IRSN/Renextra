@@ -23,7 +23,8 @@
 ##' "MAX") and their observations will be shown.
 ##' 
 ##' @param ... Not used yet.
-##'
+##' 
+##' @importFrom stats quantile
 ##' @export
 ##' @method autoplot Rendata
 ##'
@@ -49,6 +50,8 @@ autoplot.Rendata <- function(object,
                              fillPeriods = TRUE,
                              showHist = TRUE,
                              ...)  {
+    start <- end <- NULL
+    x <- xend <- y <- yend <- NULL
     
     yLab <- object$info$varName
     if (!is.null(ou <- object$info$varUnit)) {

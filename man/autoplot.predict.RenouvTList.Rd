@@ -10,6 +10,14 @@
 \arguments{
 \item{object}{An object with class \code{"predict.RenouvTList"}.}
 
+\item{confInt}{Logical. If \code{TRUE} the confidence intervals or
+bands will be shown.}
+
+\item{facets}{Logical. If \code{TRUE} a trellis graph is built
+with the facets related to the threshold. This option is
+useful when the number of thresholds is moderate, say \eqn{<
+12}.}
+
 \item{...}{Not used yet}
 }
 \value{

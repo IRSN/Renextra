@@ -18,9 +18,12 @@
 ##' @param effDuration,distname.y Effective duration and distribution
 ##'     See \code{\link{Renouv}}.
 ##'
-##' @param loopIni Logical. If \code{TRUE} the initial values are This
-##'     is because no convergence problems should arise as long as no
-##'     historical/censored observations are used.
+##' @param loopIni Logical. If \code{TRUE} the initial values of the
+##'     parameters for a threshold are derived from the known
+##'     converged cases obtained before. This is mainy useful in the
+##'     cas where historical data are used, because no convergence
+##'     problems should arise as long as no historical/censored
+##'     observations are used. \bold{NOT IMPLEMENTED YET}.
 ##' 
 ##' @param ... Further arguments to be passed to
 ##'     \code{\link{Renouv}}. Graphical arguments should not be used.
@@ -41,15 +44,22 @@
 ##'
 ##' methods(class = "RenouvTList")
 ##' autoplot(predict(fit))
+##' autoplot(coSd(fit))
+##'
+##' ## Use more thresholds and compare with the jittered data
+##' fit <- RenouvTList(Garonne,
+##'                    threshold = seq(from = 2401, to = 3001, by = 10),
+##'                    distname.y = "GPD")
+##' autoplot(coSd(fit))
 ##' fitJit <- RenouvTList(GaronneJit,
-##'                       threshold = seq(from = 2401, to = 3001, by = 100),
+##'                       threshold = seq(from = 2401, to = 3001, by = 10),
 ##'                       distname.y = "GPD")
-##' autoplot(predict(fitJit))
-##' 
+##' autoplot(coSd(fitJit))
 RenouvTList <- function(x,
                         threshold = NULL,
                         effDuration = NULL,
                         distname.y = "GPD",
+                        loopIni = FALSE,
                         ...) {
     
     threshold <- sort(threshold)
@@ -77,6 +87,15 @@ RenouvTList <- function(x,
 ##' @param object An object with class \code{"RenouvTList"} as created
 ##'     by using \code{\link{RenouvTList}}.
 ##'
+##' @param reParam Logical. Can only be used when the distribution is
+##'     \code{"GPD"}. If \code{TRUE} the GPD scale parameter
+##'     \eqn{\sigma} is replaced by the modified scale
+##'     \eqn{\sigma^\star := \sigma - u \xi}, where \eqn{u} is the
+##'     threshold and \eqn{\xi} is the GPD shape. The parameter
+##'     \eqn{\sigma^\star} does not depend on the threshold. Remind
+##'     that the distribution is specified by using the
+##'     \code{distname.y} argument of the creator \code{RenouvTList}.
+##'
 ##' @param ... Not used yet.
 ##'
 ##' @return A numeric matrix with its rows corresponding to the
@@ -93,12 +112,14 @@ RenouvTList <- function(x,
 ##' 
 coef.RenouvTList <- function(object, reParam = TRUE, ...) {
     u <- attr(object, "threshold")
-    mat <- t(sapply(object, coef))
     dn <- sapply(object, function(x) x$distname.y)
     if (length(dn <- unique(dn)) > 1) {
         stop("all elements of 'object' must have the same ",
              "'distname.y' element")
     }
+
+    mat <- t(sapply(object, coef))
+    
     if (reParam) {
         if (dn == "GPD") {
             mat[ , "scale"] <- mat[ , "scale"] - u * mat[ , "shape"]
@@ -128,17 +149,89 @@ print.coef.RenouvTList <- function(x, ...) {
 
 ## *****************************************************************************
 
+##' @description Extract the estimated coefficients and their standard
+##'     deviation as an object with class \code{"coSd.RenouvTList"} for
+##'     which some methods are available such as \code{autoplot} and
+##'     \code{print}.
+##' 
+##' @details The POT parameters of a \code{Renouv} object with a GP
+##'     distribution of the eceedances are named \code{"lambda"},
+##'     \code{"scale"} and \code{"shape"}. If a reparameterization is
+##'     used \code{reParam = TRUE}, the modified GP scale
+##'     \eqn{\sigma^\star} is named \code{scale.ind} to recall the
+##'     independence from the threshold. Note that although the
+##'     \code{print} method displays the object as a matrix, it
+##'     actually consists in a list of two matrices.
+##' 
+##' @title Estimated Coefficients and their Standard Deviation
+##'
+##' @param object A \code{RenouvTList} object.
+##' 
+##' @param reParam Logical. Can only be used when the distribution is
+##'     \code{"GPD"}. If \code{TRUE} the GPD scale parameter
+##'     \eqn{\sigma} is replaced by the modified scale
+##'     \eqn{\sigma^\star := \sigma - u \xi}, where \eqn{u} is the
+##'     threshold and \eqn{\xi} is the GPD shape. The parameter
+##'     \eqn{\sigma^\star} does not depend on the threshold. Remind
+##'     that the distribution is specified by using the
+##'     \code{distname.y} argument of the creator \code{RenouvTList}.
+##'
+##' @param ... Not used yet.
+##'
+##' @references Coles S. (2001). \emph{An Introduction to Statistical
+##'     Modeling of Extreme Values} Springer-Verlag.
+##' 
+##' @method coSd RenouvTList
+##'
+##' @importFrom stats vcov
+##' @export
+coSd.RenouvTList <- function(object, reParam = TRUE, ...)  {
 
-coSd.RenouvTList <- function(object, ...)  {
-
-    coSdR <- function(x) {
-        sprintf("%6.3f [%5.3f]", x[["estimate"]], x[["sigma"]])
+    u <- attr(object, "threshold")
+    dn <- sapply(object, function(x) x$distname.y)
+    if (length(dn <- unique(dn)) > 1) {
+        stop("all elements of 'object' must have the same ",
+             "'distname.y' element")
     }
-    mat <- noquote(t(sapply(fit, coSdR)))
-    colnames(mat) <- names(coef(object[[1]]))
-    mat
+    
+    est  <- t(sapply(object, coef))
+    sigma  <- t(sapply(object, function(x) x$sigma))
+
+    if (reParam) {
+        if (dn == "GPD") {
+            Sigma <- lapply(object, vcov)
+            est[ , "scale"] <- est[ , "scale"] - u * est[ , "shape"]
+            for (i in seq_along(u)) {
+                sigma[i, "scale"] <- sqrt(Sigma[[i]]["scale", "scale"] -
+                                          2 * u[i] * Sigma[[i]]["scale", "shape"] +
+                    u[i]^2 *  Sigma[[i]]["shape", "shape"])
+            }
+            colnames(est)[2] <- colnames(sigma)[2] <- c("scale ind.")
+        } else {
+            stop("'reParam' can only be 'TRUE' when the distribution ",
+                 "is \"GPD\"")
+        }
+    } 
+    
+    res <- list(est = est, sigma = sigma)
+    attr(res, "threshold") <- u
+    class(res) <- "coSd.RenouvTList"
+    res
 }
 
+##' @method print coSd.RenouvTList
+##' @export
+##' 
+print.coSd.RenouvTList <- function(x, ...) {
+    mat <- array("", dim = dim(x$est), dimnames = dimnames(x$est))
+    
+    for (i in 1:ncol(mat)) {
+        mat[ , i] <- sprintf("%6.3f [%5.3f]",
+                             x[["est"]][ , i], x[["sigma"]][ , i])
+    }
+    print(noquote(mat))
+}
+    
 ## *****************************************************************************
 
 ##' @description Compute a data frame of return levels for the all the
@@ -151,6 +244,12 @@ coSd.RenouvTList <- function(object, ...)  {
 ##'
 ##' @param object An object with class \code{"RenouvTList"}.
 ##'
+##' @param newdata A vector containing the periods at which the return
+##'     levels are to be computed. If missing a default choice is
+##'     made.
+##' 
+##' @param level The confidence level.
+##' 
 ##' @param ... Further arguments to be passed to \code{predict}.
 ##'
 ##' @return An object with class \code{"predict.RenouvTList"}
@@ -158,6 +257,8 @@ coSd.RenouvTList <- function(object, ...)  {
 ##'
 ##' @method predict RenouvTList
 ##' @export
+##'
+##' @importFrom data.table rbindlist
 ##' 
 predict.RenouvTList <- function(object,
                                 newdata,
