@@ -67,7 +67,9 @@ RenouvTList <- function(x,
     res <- list()
     
     for (i in seq_along(threshold)) {
-        res[[i]] <- Renouv(x = x, threshold = threshold[i],
+        res[[i]] <- Renouv(x = x,
+                           threshold = threshold[i],
+                           effDuration = effDuration,
                            distname.y = distname.y,
                            plot = FALSE,
                            ...)
@@ -96,6 +98,10 @@ RenouvTList <- function(x,
 ##'     that the distribution is specified by using the
 ##'     \code{distname.y} argument of the creator \code{RenouvTList}.
 ##'
+##' @param lambda Logical. If \code{TRUE} the Poisson rate is included
+##'     in the results. The choice \code{FALSE} is relevant for
+##'     threshold stability analyzes.
+##'
 ##' @param ... Not used yet.
 ##'
 ##' @return A numeric matrix with its rows corresponding to the
@@ -110,20 +116,29 @@ RenouvTList <- function(x,
 ##'                    distname.y = "GPD")
 ##' autoplot(coef(fit))
 ##' 
-coef.RenouvTList <- function(object, reParam = TRUE, ...) {
+coef.RenouvTList <- function(object, reParam, lambda = TRUE, ...) {
+    
     u <- attr(object, "threshold")
     dn <- sapply(object, function(x) x$distname.y)
     if (length(dn <- unique(dn)) > 1) {
         stop("all elements of 'object' must have the same ",
              "'distname.y' element")
     }
-
+    
+    if (missing(reParam)) {
+        reParam <- ifelse(dn %in% c("GPD"), TRUE, FALSE)
+    }
+    
     mat <- t(sapply(object, coef))
+    if (!lambda) {
+        ind <- colnames(mat) != "lambda"
+        mat <- mat[ , ind]
+    }
     
     if (reParam) {
-        if (dn == "GPD") {
+        if (dn %in% c("GPD")) {
             mat[ , "scale"] <- mat[ , "scale"] - u * mat[ , "shape"]
-            colnames(mat)[2] <- c("scale ind.")
+            colnames(mat) <- sub("^scale$", "scale ind", colnames(mat))
         } else {
             stop("'reParam' can only be 'TRUE' when the distribution ",
                  "is \"GPD\"")
@@ -176,6 +191,10 @@ print.coef.RenouvTList <- function(x, ...) {
 ##'     that the distribution is specified by using the
 ##'     \code{distname.y} argument of the creator \code{RenouvTList}.
 ##'
+##' @param lambda Logical. If \code{TRUE} the Poisson rate is included
+##'     in the results. The choice \code{FALSE} is relevant for
+##'     threshold stability analyzes.
+##' 
 ##' @param ... Not used yet.
 ##'
 ##' @references Coles S. (2001). \emph{An Introduction to Statistical
@@ -185,7 +204,7 @@ print.coef.RenouvTList <- function(x, ...) {
 ##'
 ##' @importFrom stats vcov
 ##' @export
-coSd.RenouvTList <- function(object, reParam = TRUE, ...)  {
+coSd.RenouvTList <- function(object, reParam, lambda = TRUE,  ...)  {
 
     u <- attr(object, "threshold")
     dn <- sapply(object, function(x) x$distname.y)
@@ -194,11 +213,21 @@ coSd.RenouvTList <- function(object, reParam = TRUE, ...)  {
              "'distname.y' element")
     }
     
+    if (missing(reParam)) {
+        reParam <- ifelse(dn  %in% c("GPD"), TRUE, FALSE)
+    }
     est  <- t(sapply(object, coef))
     sigma  <- t(sapply(object, function(x) x$sigma))
-
+    ## sigma  <- t(sapply(object, function(x) sqrt(diag(vcov(x)))))
+    if (!lambda) {
+        ind <- colnames(est) != "lambda"
+        est <- est[ , ind]
+        ind <- colnames(sigma) != "lambda"
+        sigma <- sigma[ , ind]
+     }
+    
     if (reParam) {
-        if (dn == "GPD") {
+        if (dn %in% c("GPD")) {
             Sigma <- lapply(object, vcov)
             est[ , "scale"] <- est[ , "scale"] - u * est[ , "shape"]
             for (i in seq_along(u)) {
@@ -206,7 +235,7 @@ coSd.RenouvTList <- function(object, reParam = TRUE, ...)  {
                                           2 * u[i] * Sigma[[i]]["scale", "shape"] +
                     u[i]^2 *  Sigma[[i]]["shape", "shape"])
             }
-            colnames(est)[2] <- colnames(sigma)[2] <- c("scale ind.")
+            colnames(est) <- colnames(sigma) <- sub("^scale$", "scale ind", colnames(est))
         } else {
             stop("'reParam' can only be 'TRUE' when the distribution ",
                  "is \"GPD\"")

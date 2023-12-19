@@ -55,7 +55,23 @@
 ##' \emph{J. Stat. Plan. Inference}, \bold{143}(3): 131-143.
 ##' 
 ##' @examples
+##' xi <- 0.2
+##' kappa <- 1.1
+##' x <- qEGPD3(c(0.001, 0.999), shape = xi, kappa = kappa)
+##' x <- seq(from = x[1], to = x[2], length.out = 300)
+##' plot(x, dEGPD3(x, shape = xi, kappa = kappa), type = "l",
+##'      xlab = "", ylab = "dens", main = "EGPD3 density")
 ##'
+##' fit <- RenouvTList(x = GaronneJit, distname.y = "GPD",
+##'                    threshold = seq(from = 2401, to = 3001, by = 100),
+##'                    start.par.y = c(scale = 2000, shape = -0.2, kappa = 1.0))
+##' autoplot(predict(fit))
+##' ## Now use the 'EGPD3' distribution for the exceedances.
+##' fitE <- RenouvTList(x = GaronneJit, distname.y = "EGPD3",
+##'                    threshold = seq(from = 2401, to = 3001, by = 100),
+##'                    start.par.y = c(scale = 2000, shape = -0.2, kappa = 1.0))
+##' coef(fitE, reParam = FALSE)
+##' autoplot(predict(fitE))
 ##' 
 dEGPD3 <- function(x, scale = 1.0, shape = 0.0, kappa = 1.0, log = FALSE) {
     ind <- (x > 0.0)
@@ -94,4 +110,3 @@ rEGPD3 <- function(n = 1L, scale = 1.0, shape = 0.0, kappa = 1.0) {
     U <- runif(n)
     qEGPD3(U, scale = scale, shape = shape, kappa = kappa)
 }
-

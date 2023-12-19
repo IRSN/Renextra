@@ -60,6 +60,26 @@ F_{\text{GPD}}(x; \,\sigma,\,\xi)^\kappa}{G(x, \sigma, \xi,
 tail-equivalent to the two-parameter GPD with the same scale
 \eqn{\sigma} and shape \eqn{\xi}.
 }
+\examples{
+xi <- 0.2
+kappa <- 1.1
+x <- qEGPD3(c(0.001, 0.999), shape = xi, kappa = kappa)
+x <- seq(from = x[1], to = x[2], length.out = 300)
+plot(x, dEGPD3(x, shape = xi, kappa = kappa), type = "l",
+     xlab = "", ylab = "dens", main = "EGPD3 density")
+
+fit <- RenouvTList(x = GaronneJit, distname.y = "GPD",
+                   threshold = seq(from = 2401, to = 3001, by = 100),
+                   start.par.y = c(scale = 2000, shape = -0.2, kappa = 1.0))
+autoplot(predict(fit))
+## Now use the 'EGPD3' distribution for the exceedances.
+fitE <- RenouvTList(x = GaronneJit, distname.y = "EGPD3",
+                   threshold = seq(from = 2401, to = 3001, by = 100),
+                   start.par.y = c(scale = 2000, shape = -0.2, kappa = 1.0))
+coef(fitE, reParam = FALSE)
+autoplot(predict(fitE))
+
+}
 \references{
 Iaonnis Papastathopoulos and Jonathan A. Tawn (2013).
 "Extended generalised Pareto models for tail estimation".

@@ -4,7 +4,7 @@
 \alias{coef.RenouvTList}
 \title{Coefficients of a \code{RenouvTList} Object}
 \usage{
-\method{coef}{RenouvTList}(object, reParam = TRUE, ...)
+\method{coef}{RenouvTList}(object, reParam, lambda = TRUE, ...)
 }
 \arguments{
 \item{object}{An object with class \code{"RenouvTList"} as created
@@ -18,6 +18,10 @@ threshold and \eqn{\xi} is the GPD shape. The parameter
 \eqn{\sigma^\star} does not depend on the threshold. Remind
 that the distribution is specified by using the
 \code{distname.y} argument of the creator \code{RenouvTList}.}
+
+\item{lambda}{Logical. If \code{TRUE} the Poisson rate is included
+in the results. The choice \code{FALSE} is relevant for
+threshold stability analyzes.}
 
 \item{...}{Not used yet.}
 }

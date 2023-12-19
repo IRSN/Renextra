@@ -81,8 +81,9 @@ autoplot.Renouv <- function(object,
     ## decreasing confidence order.
     ## =========================================================================
     
-    periods <- as.vector(outer(c(1, 2, 3, 5, 7), c(1, 10, 100, 1000)))
-
+    periods <- as.vector(outer(c(1, 2, 3, 5, 7), c(1, 10, 100)))
+    periods <- c(periods, 1000)
+    
     L <- lapply(level, function(lev) {
         p <- predict(object, level = lev, newdata = periods)
         names(p) <- c("Period", "Quantile", "L", "U")
@@ -189,7 +190,8 @@ if (FALSE) {
 ##'
 ##' @param posOptions,byBlockStyle See \code{\link{autoplot.Renouv}}.
 ##'
-##' @param ... Not used yet.
+##' @param ... Further argument to be passed to the \code{geom_} function.
+##'    
 ##'
 ##' @export
 ##' @method autolayer Renouv
@@ -235,18 +237,21 @@ autolayer.Renouv <- function(object,
  
     if (which == "quant") {
         geom_line(data = pred,
-                  mapping = aes(x = Period, y = Quantile))
+                  mapping = aes(x = Period, y = Quantile),
+                  ...)
     } else if (which == "conf") {
         geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U,
                                   fill = Level, linetype = Level),
-                    colour = "darkgray")
+                    colour = "darkgray",
+                    ...)
     } else if (which == "allObs") {
+        ggnewscale::new_scale_colour( )
+        ggnewscale::new_scale_fill( )
         geom_point(data = L$dfST,
                    mapping = aes(x = Period, y = Quantile,
                                  shape = Group, col = Group,
                                  fill = Group),
-                   stroke = 1.5)
-        
+                   stroke = 1.5, ...)
     } else if (which == "emptyOTS") {
         if (nrow(L$dfSeg)) {
             geom_segment(data = L$dfSeg,
@@ -254,9 +259,11 @@ autolayer.Renouv <- function(object,
                                        y = y, yend = yend,
                                        colour = Group,
                                        group = Group),
-                         linetype = 2, size = 0.9)
+                         linetype = 2, size = 0.9, ...)
         }
     }
 
 }
+
+
 

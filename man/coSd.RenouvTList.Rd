@@ -4,7 +4,7 @@
 \alias{coSd.RenouvTList}
 \title{Estimated Coefficients and their Standard Deviation}
 \usage{
-\method{coSd}{RenouvTList}(object, reParam = TRUE, ...)
+\method{coSd}{RenouvTList}(object, reParam, lambda = TRUE, ...)
 }
 \arguments{
 \item{object}{A \code{RenouvTList} object.}
@@ -17,6 +17,10 @@ threshold and \eqn{\xi} is the GPD shape. The parameter
 \eqn{\sigma^\star} does not depend on the threshold. Remind
 that the distribution is specified by using the
 \code{distname.y} argument of the creator \code{RenouvTList}.}
+
+\item{lambda}{Logical. If \code{TRUE} the Poisson rate is included
+in the results. The choice \code{FALSE} is relevant for
+threshold stability analyzes.}
 
 \item{...}{Not used yet.}
 }

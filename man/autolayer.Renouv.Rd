@@ -23,7 +23,7 @@
 
 \item{posOptions, byBlockStyle}{See \code{\link{autoplot.Renouv}}.}
 
-\item{...}{Not used yet.}
+\item{...}{Further argument to be passed to the \code{geom_} function.}
 }
 \description{
 Create a \code{ggplot} layer appropriate to represent

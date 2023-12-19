@@ -3,6 +3,7 @@
 S3method(autolayer,Renouv)
 S3method(autoplot,Rendata)
 S3method(autoplot,Renouv)
+S3method(autoplot,RenouvTList)
 S3method(autoplot,coSd.RenouvTList)
 S3method(autoplot,coef.RenouvTList)
 S3method(autoplot,predict.RenouvTList)

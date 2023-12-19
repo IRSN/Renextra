@@ -37,5 +37,17 @@ fit <- RenouvTList(Garonne,
                    threshold = seq(from = 2401, to = 3001, by = 100),
                    distname.y = "GPD")
 autoplot(predict(fit))
-
+\dontrun{
+    library(mev)
+    fit <- RenouvTList(nidd,
+                       effDuration = 35,
+                       threshold = seq(from = 65.08, to = 88.61, len = 40),
+                       distname.y = "GPD")
+     fitE <- RenouvTList(nidd,
+                       effDuration = 35,
+                       threshold = seq(from = 65.08, to = 88.61, len = 40),
+                       start.par.y = c(scale = 30, shape = 0.0, kappa = 1.0),
+                       distname.y = "EGPD3")
+     autoplot(coSd(fitE, lambda = FALSE))
+}
 }
