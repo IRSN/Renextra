@@ -7,11 +7,13 @@
 \method{autoplot}{coSd.RenouvTList}(object, facets, ...)
 }
 \arguments{
-\item{object}{A \code{RenouvTList} object.}
+\item{object}{An object with class \code{"coSd.RenouvTlist"} as
+created by applying the \code{coSd} method to a
+\code{RenouvTlist} object.}
 
 \item{facets}{Logical. If \code{TRUE} the created \code{ggplot}
-object is a trellis graphics with onse facet for each
-threshold value.}
+object is a trellis graphics with one facet for each threshold
+value.}
 
 \item{...}{Not used yet.}
 }

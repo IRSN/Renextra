@@ -48,6 +48,10 @@ Although the classical methods like \code{coef} are
     result is in some cases given a special class that allows
     further invetigation. See the \bold{Example} section.
 }
+\note{
+The warnings generated when iteratively calling
+    \code{\link[Renext]{Renouv}} are suppressed.
+}
 \section{Caution}{
  the default distribution for the exceedances is
     taken to be the usual two-parameter Generalised Pareto

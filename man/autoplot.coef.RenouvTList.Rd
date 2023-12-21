@@ -8,10 +8,12 @@
 \method{autoplot}{coef.RenouvTList}(object, facets, ...)
 }
 \arguments{
-\item{object}{A \code{RenouvTList} object}
+\item{object}{An object with class \code{"coef.RenouvTList"} as
+created by applying the \code{\link{coef.RenouvTList}} method
+to a \code{RenouvTList} object.}
 
 \item{facets}{Logical. It \code{TRUE} each parameter is shown in
-one facet oa trellis graphics.}
+one facet of a trellis graphics.}
 
 \item{...}{Not used yet.}
 }
@@ -32,4 +34,8 @@ fitJit <- RenouvTList(GaronneJit,
 autoplot(coef(fit))
 autoplot(coef(fitJit))
 
+}
+\seealso{
+\code{\link{autoplot.coSd.RenouvTList}} for an
+    \code{autoplot} method showing conficence intervals.
 }

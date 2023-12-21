@@ -31,6 +31,9 @@
 ##' @return An object with (S3) class \code{"RenouvTList"}. This S3
 ##'     class has a number of methods.
 ##'
+##' @note The warnings generated when iteratively calling
+##'     \code{\link[Renext]{Renouv}} are suppressed.
+##' 
 ##' @section Caution: the default distribution for the exceedances is
 ##'     taken to be the usual two-parameter Generalised Pareto
 ##'     \code{"GPD"} rather than exponential.
@@ -66,15 +69,18 @@ RenouvTList <- function(x,
 
     res <- list()
     
-    for (i in seq_along(threshold)) {
-        res[[i]] <- Renouv(x = x,
-                           threshold = threshold[i],
-                           effDuration = effDuration,
-                           distname.y = distname.y,
-                           plot = FALSE,
-                           ...)
-    }
-
+    suppressWarnings({
+        for (i in seq_along(threshold)) {        
+            res[[i]] <- Renouv(x = x,
+                               threshold = threshold[i],
+                               effDuration = effDuration,
+                               distname.y = distname.y,
+                               plot = FALSE,
+                               ...)
+            
+        }
+    })
+    
     names(res) <- paste0("u = " , format(threshold))
     attr(res, "threshold") <- threshold
     class(res) <- c("RenouvTList", "RenouvList")
@@ -317,7 +323,32 @@ predict.RenouvTList <- function(object,
     pred
 }
 
+##' @export
+##' @method summary RenouvTList
+##' 
 summary.RenouvTList <- function(object, ...) {
-    
-    
+    x <- object
+    x$coSd <- print(coSd(object))
+    x$KS <- round(t(sapply(object,
+                           function(o) c(n = o$nb.OT,
+                                         o$KS$stat,
+                                         "p.value" = o$KS$p.value))),
+                  digits = 4)
+    class(x) <- "summary.RenouvTList"
+    x
+}
+
+##' @export
+##' @method print summary.RenouvTList
+##' 
+print.summary.RenouvTList <- function(x,
+                                      digits = max(3, getOption("digits") - 3),
+                                      symbolic.cor = x$symbolic.cor,
+                                      signif.stars = getOption("show.signif.stars"),
+                                      ...) {
+    cat("RenouvTList object\n")
+    cat("o Estimated coefficients\n")
+    print(x$coSd)
+    cat("o  Kolmogorov-Smirnov test\n")
+    print(x$KS)
 }

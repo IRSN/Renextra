@@ -13,10 +13,10 @@
 \item{confInt}{Logical. If \code{TRUE} the confidence intervals or
 bands will be shown.}
 
-\item{facets}{Logical. If \code{TRUE} a trellis graph is built
-with the facets related to the threshold. This option is
-useful when the number of thresholds is moderate, say \eqn{<
-12}.}
+\item{facets}{Logical. If \code{TRUE} a trellis graph is built,
+with its facets corresponding to the thresholds. This option
+is useful when the number of thresholds is moderate, say
+\eqn{< 12}.}
 
 \item{...}{Not used yet}
 }
@@ -27,10 +27,11 @@ A \code{ggplot} object.
 Generate a \code{ggplot} for a \code{predict.RenouvTList} object.
 }
 \details{
-The plot shows the return level against the (log) return period.
-This plot is useful to asses the impact of the threshold on the
-return level curve and the corresponding confidence
-intervals. However, the number of threshold should be < 10.
+The plot shows the return level against the (log-) return period.
+This plot is useful to assess the impact of the threshold choice
+on the return level curve and on the corresponding confidence
+intervals. However, the number of thresholds should be kept \eqn{<
+12}.
 }
 \examples{
 fit <- RenouvTList(Garonne,

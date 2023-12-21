@@ -43,5 +43,9 @@ Generate a \code{ggplot} from a \code{RenouvTList}
     positions, and confidence intervals on the return levels.
 }
 \seealso{
-\code{\link{autoplot.coef.RenouvTList}}
+\code{\link{autoplot.coef.RenouvTList}} and
+    \code{\link{autoplot.coSd.RenouvTList}} to (auto)plot the
+    estimated coefficients possibly with confidence intervals and
+    \code{\link{autoplot.coef.RenouvTList}} to (auto) plot the
+    return levels possibly with confidence intervals.
 }

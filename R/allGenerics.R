@@ -12,7 +12,7 @@
 ##' 
 ##' @param object An object typically representing a fitted model from
 ##'     which one can extract (estimated) coefficients and their
-##'     standart deviation.
+##'     standard deviation.
 ##' 
 ##' @param ... Further arguments for methods.
 ##'

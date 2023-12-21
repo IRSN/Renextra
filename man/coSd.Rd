@@ -10,7 +10,7 @@ coSd(object, ...)
 \arguments{
 \item{object}{An object typically representing a fitted model from
 which one can extract (estimated) coefficients and their
-standart deviation.}
+standard deviation.}
 
 \item{...}{Further arguments for methods.}
 }

@@ -3,10 +3,11 @@
 
 ##' Generate a \code{ggplot} for a \code{predict.RenouvTList} object.
 ##'
-##' The plot shows the return level against the (log) return period.
-##' This plot is useful to asses the impact of the threshold on the
-##' return level curve and the corresponding confidence
-##' intervals. However, the number of threshold should be < 10.
+##' The plot shows the return level against the (log-) return period.
+##' This plot is useful to assess the impact of the threshold choice
+##' on the return level curve and on the corresponding confidence
+##' intervals. However, the number of thresholds should be kept \eqn{\leq
+##' 12}.
 ##' 
 ##' @title Generate a \code{ggplot} for a \code{predict.RenouvTList}
 ##'     Object
@@ -16,10 +17,10 @@
 ##' @param confInt Logical. If \code{TRUE} the confidence intervals or
 ##'     bands will be shown.
 ##'  
-##' @param facets Logical. If \code{TRUE} a trellis graph is built
-##'     with the facets related to the threshold. This option is
-##'     useful when the number of thresholds is moderate, say \eqn{<
-##'     12}.
+##' @param facets Logical. If \code{TRUE} a trellis graph is built,
+##'     with its facets corresponding to the thresholds. This option
+##'     is useful when the number of thresholds is moderate, say
+##'     \eqn{\leq 12}.
 ##'
 ##' @param ... Not used yet
 ##'
@@ -58,12 +59,12 @@ autoplot.predict.RenouvTList <- function(object,
     }
 
     threshFact <- FALSE
-    if (length(unique(object$Threshold)) < 12) {
+    if (length(unique(object$Threshold)) <= 12) {
         object <- within(object, Threshold <- factor(Threshold))
         threshFact <- TRUE
     } else {
         if (facets) {
-            warning("'facets = TRUE' is only possible with < 12 threshold values")
+            warning("'facets = TRUE' is only possible with <= 12 threshold values")
             facets <- FALSE
         }
     }
@@ -121,15 +122,20 @@ autoplot.predict.RenouvTList <- function(object,
 ##' @title Build a \code{ggplot} for the Coeficients of a
 ##'     \code{RenouvTList} Object
 ##'
-##' @param object A \code{RenouvTList} object
+##' @param object An object with class \code{"coef.RenouvTList"} as
+##'     created by applying the \code{\link{coef.RenouvTList}} method
+##'     to a \code{RenouvTList} object.
 ##'
 ##' @param facets Logical. It \code{TRUE} each parameter is shown in
-##'     one facet oa trellis graphics.
+##'     one facet of a trellis graphics.
 ##'
 ##' @param ... Not used yet.
 ##' 
 ##' @return A \code{ggplot} object.
 ##'
+##' @seealso \code{\link{autoplot.coSd.RenouvTList}} for an
+##'     \code{autoplot} method showing conficence intervals.
+##' 
 ##' @method autoplot coef.RenouvTList
 ##' @export
 ##'
@@ -168,11 +174,13 @@ autoplot.coef.RenouvTList <- function(object,
 ##' 
 ##' @title Generate a \code{ggplot} from a \code{coSd.RenouvTList} Object
 ##' 
-##' @param object A \code{RenouvTList} object.
+##' @param object An object with class \code{"coSd.RenouvTlist"} as
+##'     created by applying the \code{coSd} method to a
+##'     \code{RenouvTlist} object.
 ##' 
 ##' @param facets Logical. If \code{TRUE} the created \code{ggplot}
-##'     object is a trellis graphics with onse facet for each
-##'     threshold value.
+##'     object is a trellis graphics with one facet for each threshold
+##'     value.
 ##'
 ##' @param ... Not used yet.
 ##' 
@@ -252,7 +260,12 @@ autoplot.coSd.RenouvTList <- function(object,
 ##' @export
 ##'
 ##' @method autoplot RenouvTList
-##' @seealso \code{\link{autoplot.coef.RenouvTList}}
+##' 
+##' @seealso \code{\link{autoplot.coef.RenouvTList}} and
+##'     \code{\link{autoplot.coSd.RenouvTList}} to (auto)plot the
+##'     estimated coefficients possibly with confidence intervals and
+##'     \code{\link{autoplot.coef.RenouvTList}} to (auto) plot the
+##'     return levels possibly with confidence intervals.
 ##' 
 autoplot.RenouvTList <- function(object,
                                  show = list(quant = TRUE, conf = TRUE, allObs = TRUE),
@@ -274,7 +287,9 @@ autoplot.RenouvTList <- function(object,
         L <- c(list(object = object), predOptions)
         pred <- do.call(predict, L)
         g <- autoplot(pred, confInt = isTRUE(show$conf))
-    } 
+    } else {
+       stop("For now, at least one of  `show$quant` or `show$conf` must be TRUE")
+    }
     
     if (isTRUE(show$allObs)) {
         
