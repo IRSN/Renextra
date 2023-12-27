@@ -53,6 +53,10 @@ documentation.
 ## Examples
 
 ### Garonne (Jitterized)
+
+The `GaronneJit` data object is a `Rendata` object derived from the
+`Renouv` object**Renext** by jitterizing the observations 
+
 ```{r, message=FALSE, fig.height=4}
 library(Renextra)
 autoplot(GaronneJit)
@@ -64,6 +68,9 @@ autoplot(fitGJ)
 ```
 
 ### Nidd River 
+
+The Nidd river example has been used in Davison and Smith (1990). The data 
+are provided by the **mev** package.
 
 ```{r, message=FALSE, fig.height=4}
  library(mev)

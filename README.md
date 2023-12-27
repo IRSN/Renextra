@@ -48,6 +48,9 @@ documentation.
 
 ### Garonne (Jitterized)
 
+The `GaronneJit` data object is a `Rendata` object derived from the
+`Renouv` object**Renext** by jitterizing the observations
+
 ``` r
 library(Renextra)
 autoplot(GaronneJit)
@@ -63,6 +66,9 @@ autoplot(fitGJ)
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ### Nidd River
+
+The Nidd river example has been used in Davison and Smith (1990). The
+data are provided by the **mev** package.
 
 ``` r
  library(mev)
@@ -86,14 +92,14 @@ autoplot(fitGJ)
     ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
     ## o  Kolmogorov-Smirnov test
     ##           n      D p.value
-    ## u =  70 138 0.0749  0.4214
-    ## u =  80  86 0.0536  0.9544
-    ## u =  90  57 0.0750  0.8818
-    ## u = 100  39 0.1010  0.7837
-    ## u = 110  31 0.0990  0.8921
-    ## u = 120  24 0.1077  0.9158
-    ## u = 130  22 0.1140  0.9067
-    ## u = 140  18 0.1433  0.8038
+    ## u =  70 138 0.0750  0.4191
+    ## u =  80  86 0.0536  0.9545
+    ## u =  90  57 0.0752  0.8801
+    ## u = 100  39 0.1009  0.7848
+    ## u = 110  31 0.0989  0.8929
+    ## u = 120  24 0.1076  0.9162
+    ## u = 130  22 0.1144  0.9047
+    ## u = 140  18 0.1417  0.8146
 
 ``` r
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))
