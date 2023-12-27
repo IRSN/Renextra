@@ -26,12 +26,12 @@ features of the **Renext** package, in which the distribution of the
 excesses over the threshold can be quite arbitrary. So, some initial
 values of the parameters must be given. The estimated values of the
 `scale` and `shape` parameters obtained by using the `"GPD"`
-distribution can be used alogn with `kappa = 1.0`, see the examples.
+distribution can be used along with `kappa = 1.0`, see the examples.
 
 ## Installing
 
 Provided that the **remotes** package is installed, the installation of
-dailymet from github can be done by using
+**Renextra** from github can be done by using
 
 ``` r
 library(remotes)
@@ -86,14 +86,14 @@ autoplot(fitGJ)
     ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
     ## o  Kolmogorov-Smirnov test
     ##           n      D p.value
-    ## u =  70 138 0.0751  0.4182
-    ## u =  80  86 0.0537  0.9539
-    ## u =  90  57 0.0749  0.8824
-    ## u = 100  39 0.1013  0.7810
-    ## u = 110  31 0.0982  0.8979
-    ## u = 120  24 0.1078  0.9148
-    ## u = 130  22 0.1142  0.9055
-    ## u = 140  18 0.1427  0.8080
+    ## u =  70 138 0.0749  0.4214
+    ## u =  80  86 0.0536  0.9544
+    ## u =  90  57 0.0750  0.8818
+    ## u = 100  39 0.1010  0.7837
+    ## u = 110  31 0.0990  0.8921
+    ## u = 120  24 0.1077  0.9158
+    ## u = 130  22 0.1140  0.9067
+    ## u = 140  18 0.1433  0.8038
 
 ``` r
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))

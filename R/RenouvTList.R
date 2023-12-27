@@ -303,7 +303,7 @@ predict.RenouvTList <- function(object,
     
     noData <- (missing(newdata) || is.null(newdata))
     if (noData) {
-        newdata <- as.vector(outer(c(1, 2, 3, 5, 7), c(1, 10, 100, 1000)))
+        newdata <- as.vector(outer(c(1, 2, 3, 5, 7, 10.1), c(1, 10, 100)))
     }
     
     predLong <- function(object, newdata, level, ...) {

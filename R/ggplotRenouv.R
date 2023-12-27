@@ -81,7 +81,7 @@ autoplot.Renouv <- function(object,
     ## decreasing confidence order.
     ## =========================================================================
     
-    periods <- as.vector(outer(c(1, 2, 3, 5, 7), c(1, 10, 100)))
+    periods <- as.vector(outer(c(1, 2, 3, 5, 7, 10.10), c(1, 10, 100)))
     periods <- c(periods, 1000)
     
     L <- lapply(level, function(lev) {
@@ -218,7 +218,7 @@ autolayer.Renouv <- function(object,
     x <- xend <- y <- yend <- NULL
  
     which <- match.arg(which)
-    periods <- as.vector(outer(c(1, 2, 3, 5, 7), c(1, 10, 100, 1000)))
+    periods <- as.vector(outer(c(1, 2, 3, 5, 7, 10.10), c(1, 10, 100)))
 
     L <- lapply(level, function(lev) {
         p <- predict(object, level = lev, newdata = periods)

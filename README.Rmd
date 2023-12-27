@@ -37,7 +37,7 @@ The present features of **Renextra** are
 ## Installing
 
 Provided that the **remotes** package is installed, the installation of
-dailymet from github can be done by using
+**Renextra** from github can be done by using
 
 
 ```{r, eval=FALSE}
