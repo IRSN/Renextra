@@ -25,12 +25,12 @@ The present features of **Renextra** are
 - Experimental implementation of the Extended Generalized Pareto
  Distribution EGPD3 of Papatatopoulos and Tawn (2013).
  
- Note that the use of the EGPD3 relies on the the general features of
- the **Renext** pacakge, in which the distribution of the excesses
- over the threshold can be quite arbitrary. So, some initial values of
- the parameters must be given. The estimated values of the `scale` and
- `shape` parameters obtained by using the `"GPD"` distribution can be
- used alogn with `kappa = 1.0`, see the examples.
+ Note that the use of the `EGPD3` distribution relies on the the
+ general features of the **Renext** package, in which the distribution
+ of the excesses over the threshold can be quite arbitrary. So, some
+ initial values of the parameters must be given. The estimated values
+ of the `scale` and `shape` parameters obtained by using the `"GPD"`
+ distribution can be used along with `kappa = 1.0`, see the examples.
  
  
 
@@ -59,7 +59,7 @@ autoplot(GaronneJit)
 ```
 
 ```{r, message=FALSE, fig.height=4}
-fitGJ <- Renouv(GaronneJit, distname.y = "GPD", plot = FALSE)
+fitGJ <- Renouv(GaronneJit, threshold = 3200, distname.y = "GPD", plot = FALSE)
 autoplot(fitGJ)
 ```
 

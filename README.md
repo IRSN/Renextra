@@ -21,12 +21,12 @@ The present features of **Renextra** are
 - Experimental implementation of the Extended Generalized Pareto
   Distribution EGPD3 of Papatatopoulos and Tawn (2013).
 
-Note that the use of the EGPD3 relies on the the general features of the
-**Renext** pacakge, in which the distribution of the excesses over the
-threshold can be quite arbitrary. So, some initial values of the
-parameters must be given. The estimated values of the `scale` and
-`shape` parameters obtained by using the `"GPD"` distribution can be
-used alogn with `kappa = 1.0`, see the examples.
+Note that the use of the `EGPD3` distribution relies on the the general
+features of the **Renext** package, in which the distribution of the
+excesses over the threshold can be quite arbitrary. So, some initial
+values of the parameters must be given. The estimated values of the
+`scale` and `shape` parameters obtained by using the `"GPD"`
+distribution can be used alogn with `kappa = 1.0`, see the examples.
 
 ## Installing
 
@@ -56,7 +56,7 @@ autoplot(GaronneJit)
 ![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ``` r
-fitGJ <- Renouv(GaronneJit, distname.y = "GPD", plot = FALSE)
+fitGJ <- Renouv(GaronneJit, threshold = 3200, distname.y = "GPD", plot = FALSE)
 autoplot(fitGJ)
 ```
 
@@ -86,14 +86,14 @@ autoplot(fitGJ)
     ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
     ## o  Kolmogorov-Smirnov test
     ##           n      D p.value
-    ## u =  70 138 0.0750  0.4186
-    ## u =  80  86 0.0535  0.9551
-    ## u =  90  57 0.0750  0.8820
-    ## u = 100  39 0.1005  0.7885
-    ## u = 110  31 0.0990  0.8922
-    ## u = 120  24 0.1078  0.9150
-    ## u = 130  22 0.1139  0.9074
-    ## u = 140  18 0.1422  0.8114
+    ## u =  70 138 0.0751  0.4182
+    ## u =  80  86 0.0537  0.9539
+    ## u =  90  57 0.0749  0.8824
+    ## u = 100  39 0.1013  0.7810
+    ## u = 110  31 0.0982  0.8979
+    ## u = 120  24 0.1078  0.9148
+    ## u = 130  22 0.1142  0.9055
+    ## u = 140  18 0.1427  0.8080
 
 ``` r
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))
