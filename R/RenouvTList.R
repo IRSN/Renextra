@@ -328,7 +328,7 @@ predict.RenouvTList <- function(object,
 ##' 
 summary.RenouvTList <- function(object, ...) {
     x <- object
-    x$coSd <- print(coSd(object))
+    x$coSd <- coSd(object)
     x$KS <- round(t(sapply(object,
                            function(o) c(n = o$nb.OT,
                                          o$KS$stat,

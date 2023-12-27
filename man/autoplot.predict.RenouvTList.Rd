@@ -16,7 +16,7 @@ bands will be shown.}
 \item{facets}{Logical. If \code{TRUE} a trellis graph is built,
 with its facets corresponding to the thresholds. This option
 is useful when the number of thresholds is moderate, say
-\eqn{< 12}.}
+\eqn{\leq 12}.}
 
 \item{...}{Not used yet}
 }
@@ -30,7 +30,7 @@ Generate a \code{ggplot} for a \code{predict.RenouvTList} object.
 The plot shows the return level against the (log-) return period.
 This plot is useful to assess the impact of the threshold choice
 on the return level curve and on the corresponding confidence
-intervals. However, the number of thresholds should be kept \eqn{<
+intervals. However, the number of thresholds should be kept \eqn{\leq
 12}.
 }
 \examples{
