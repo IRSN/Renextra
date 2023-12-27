@@ -30,6 +30,20 @@ used alogn with `kappa = 1.0`, see the examples.
 
 ## Installing
 
+Provided that the **remotes** package is installed, the installation of
+dailymet from github can be done by using
+
+``` r
+library(remotes)
+install_github("yvesdeville/Renextra", dependencies = TRUE, auth_token = myToken)
+```
+
+where `myToken` is *your* token.
+
+You can also select a specific branch or a specific commit by using the
+suitable syntax for `install_github`, see the **remotes** package
+documentation.
+
 ## Examples
 
 ### Garonne (Jitterized)
@@ -39,14 +53,14 @@ library(Renextra)
 autoplot(GaronneJit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ``` r
 fitGJ <- Renouv(GaronneJit, distname.y = "GPD", plot = FALSE)
 autoplot(fitGJ)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ### Nidd River
 
@@ -72,20 +86,20 @@ autoplot(fitGJ)
     ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
     ## o  Kolmogorov-Smirnov test
     ##           n      D p.value
-    ## u =  70 138 0.0750  0.4187
-    ## u =  80  86 0.0536  0.9545
-    ## u =  90  57 0.0749  0.8828
-    ## u = 100  39 0.1008  0.7862
-    ## u = 110  31 0.0988  0.8939
-    ## u = 120  24 0.1081  0.9135
-    ## u = 130  22 0.1132  0.9107
-    ## u = 140  18 0.1442  0.7981
+    ## u =  70 138 0.0750  0.4186
+    ## u =  80  86 0.0535  0.9551
+    ## u =  90  57 0.0750  0.8820
+    ## u = 100  39 0.1005  0.7885
+    ## u = 110  31 0.0990  0.8922
+    ## u = 120  24 0.1078  0.9150
+    ## u = 130  22 0.1139  0.9074
+    ## u = 140  18 0.1422  0.8114
 
 ``` r
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
  ## Threshold Stability with ECGPD3
@@ -97,7 +111,7 @@ autoplot(fitGJ)
  autoplot(coSd(fitE, lambda = FALSE))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 ## References
 

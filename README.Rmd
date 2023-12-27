@@ -36,6 +36,20 @@ The present features of **Renextra** are
 
 ## Installing
 
+Provided that the **remotes** package is installed, the installation of
+dailymet from github can be done by using
+
+
+```{r, eval=FALSE}
+library(remotes)
+install_github("yvesdeville/Renextra", dependencies = TRUE, auth_token = myToken)
+```
+where `myToken` is *your* token. 
+
+You can also select a specific branch or a specific commit by using
+the suitable syntax for `install_github`, see the **remotes** package
+documentation.
+
 ## Examples
 
 ### Garonne (Jitterized)
