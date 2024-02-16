@@ -65,6 +65,11 @@ autoplot.Renouv <- function(object,
                             byBlockStyle = NULL,
                             ...) {
 
+    col.quant <- "ForestGreen"
+    col.conf <- "SteelBlue3"
+    fill.conf <- translude(c("SteelBlue1", "SteelBlue3"), alpha = 0.3)
+    lty.conf <- c("dashed", "dotted")
+    
     Period <- Quantile <- U <- L <- Group <- Level <- NULL
     x <- xend <- y <- yend <- NULL
     
@@ -81,9 +86,15 @@ autoplot.Renouv <- function(object,
     ## decreasing confidence order.
     ## =========================================================================
     
-    periods <- as.vector(outer(c(1, 2, 3, 5, 7, 10.10), c(1, 10, 100)))
-    periods <- c(periods, 1000)
-    
+    ## periods <- as.vector(outer(c(0.1, 1, 2, 3, 5, 7, 10.10), c(1, 10, 100)))
+    ## periods <- sort(c(periods, 1000))
+
+    logGrid <- seq(from = -log(coef(object)["lambda"], base = 10) + 1e-6,
+                   to = log(1100, base = 10),
+                   length.out = 100)
+  
+    periods <- 10^logGrid
+
     L <- lapply(level, function(lev) {
         p <- predict(object, level = lev, newdata = periods)
         names(p) <- c("Period", "Quantile", "L", "U")
@@ -102,7 +113,7 @@ autoplot.Renouv <- function(object,
                        posOptions = posOptions)
     
     ## =========================================================================
-    ## Now le t us build the layers of the ggplot  
+    ## Now let us build the layers of the ggplot  
     ## =========================================================================
     
     g <- ggplot(data = pred)
@@ -111,13 +122,19 @@ autoplot.Renouv <- function(object,
     if (isTRUE(show$conf)) {
         g <- g + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U,
                                            fill = Level, linetype = Level),
-                             colour = "darkgray")
-        g <- g + scale_fill_manual(values = translude(c("SteelBlue1", "SteelBlue3"),
-                                                      alpha = 0.3))
+                             colour = "darkgray", show.legend = FALSE)
+        ## 2 new layers
+        g <- g + geom_line(mapping = aes(x = Period, y = L, linetype = Level),
+                           colour = col.conf)
+        g <- g + geom_line(mapping = aes(x = Period, y = U, linetype = Level),
+                             colour = col.conf)
+        g <- g + scale_fill_manual(values = fill.conf) +
+            scale_linetype_manual(values = lty.conf)
     }
 
     if (isTRUE(show$quant)) {
-        g <- g + geom_line(mapping = aes(x = Period, y = Quantile))
+        g <- g + geom_line(mapping = aes(x = Period, y = Quantile),
+                           colour = col.quant )
     }
     
     if (isTRUE(show$allObs)) {
@@ -149,7 +166,9 @@ autoplot.Renouv <- function(object,
         g <- g + scale_colour_manual(name = "Group",
                                      values = c("orangered", "SpringGreen3"))
     }
-   
+
+    g <- g + labs(x = "Period", y = "Quantile")
+    
     g 
       
 }
@@ -259,7 +278,7 @@ autolayer.Renouv <- function(object,
                                        y = y, yend = yend,
                                        colour = Group,
                                        group = Group),
-                         linetype = 2, size = 0.9, ...)
+                         linetype = 2, size = 0.9, show.legend = FALSE, ...)
         }
     }
 

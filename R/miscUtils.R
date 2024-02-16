@@ -246,14 +246,7 @@ allObs.Renouv <- function(object,
             warning("'byBlockStyle' names differing from \"MAX\" or \"OTS\": ",
                     "ignored")
     }
-    ## now fill poissibly missing elements
-    for (type in c("MAX", "OTS")) {
-        if (is.null(byBlockStyle[[type]])) {
-            ht <- object[[paste("history", type, sep = ".")]]
-            if (ht$flag) byBlockStyle[[type]] <- (nlevels(ht$block) <= 10L)
-            else byBlockStyle[[type]] <- FALSE 
-        }
-    }
+
     
     ## =========================================================================
     ## Compute the plotting positions for the "points".
@@ -274,6 +267,39 @@ allObs.Renouv <- function(object,
     dfST$Group <- gsub("OTS\\.", "OTS ", dfST$Group)
     dfST$Group <- sub("MAX\\.", "MAX ", dfST$Group)
     dfST$Group <- sub("(\\d+)$", " \\1", dfST$Group)
+
+    for (type in c("MAX", "OTS")) {
+        if (is.null(byBlockStyle[[type]])) {
+            ht <- object[[paste("history", type, sep = ".")]]
+            if (ht$flag) byBlockStyle[[type]] <- (nlevels(ht$block) <= 10L)
+            else byBlockStyle[[type]] <- FALSE 
+        }
+    }
+
+    ## =========================================================================
+    ## Rename the observations in 'df$ST$Group' to match the names given
+    ## by the user in the 'MAX.data' or 'OTS.data' lists. This is possible only
+    ## when distinct names have been given.
+    ## =========================================================================
+
+    ## DEBUG oG <- dfST$Group
+    
+    for (type in c("MAX", "OTS")) {
+        bn <- object[[paste("history", type, sep = ".")]]$blockNames
+        if (any(duplicated(bn))) {
+            stop(sprintf(paste("Duplicated block names in `object$history.%s`.",
+                               "Please refit using distinct names in the", 
+                               "'%s.data' list."),
+                         type, type))
+        }
+        ubn <- unique(bn)
+        for (ibn in seq_along(ubn)) {
+            ind <- dfST$Group == paste0(type, " block ", ibn)
+            dfST$Group[ind] <- ubn[ibn] 
+        }
+    }
+
+    ## DEBUG print(cbind(oG, dfST$Group))
     
     ## =========================================================================
     ## Special care for the empty OTS blocks, if any.
@@ -324,7 +350,8 @@ allObs.Renouv <- function(object,
         dfSeg$Group <- gsub("MAX.*$", "MAX", dfSeg$Group)
     } else {
         Lev1 <- dfST$Group
-        Levs <- c(Levs, sort(unique(Lev1[grep("MAX", Lev1)])))
+        ## Levs <- c(Levs, sort(unique(Lev1[grep("MAX", Lev1)])))
+        Levs <- c(Levs, object$history.MAX$blockNames)
     }
     
     if (!byBlockStyle[["OTS"]]) {
@@ -333,11 +360,12 @@ allObs.Renouv <- function(object,
         dfSeg$Group <- gsub("OTS.*$", "OTS", dfSeg$Group)
     } else {
         Lev1 <- dfST$Group
-        Levs <- c(Levs, sort(unique(Lev1[grep("OTS", Lev1)])))
+        ## Levs <- c(Levs, sort(unique(Lev1[grep("OTS", Lev1)])))
+        Levs <- c(Levs, object$history.OTS$blockNames)
     }
     
     ## print(Levs)
-
+    
     dfST <- within(dfST, Group <- factor(Group, levels = Levs))
     dfSeg <- within(dfSeg, Group <- factor(Group))
     
