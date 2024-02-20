@@ -119,6 +119,11 @@ autoplot.predict.RenouvTList <- function(object,
 
 ## ****************************************************************************
 
+##' @details Build a \code{ggplot} object for the coefficients of a
+##'     \code{RenouvTList} object. If the \code{coef.RenouvTList} was
+##'     called with \code{sd = TRUE} then the confidence intervals on
+##'     the coefficients will be shown as a ribbon.
+##'
 ##' @title Build a \code{ggplot} for the Coeficients of a
 ##'     \code{RenouvTList} Object
 ##'
@@ -133,8 +138,7 @@ autoplot.predict.RenouvTList <- function(object,
 ##' 
 ##' @return A \code{ggplot} object.
 ##'
-##' @seealso \code{\link{autoplot.coSd.RenouvTList}} for an
-##'     \code{autoplot} method showing conficence intervals.
+##' @seealso \code{\link{coef.RenouvTList}}.
 ##' 
 ##' @method autoplot coef.RenouvTList
 ##' @export
@@ -146,24 +150,45 @@ autoplot.predict.RenouvTList <- function(object,
 ##' fitJit <- RenouvTList(GaronneJit,
 ##'                       threshold = seq(from = 2401, to = 3001, by = 10),
 ##'                       distname.y = "GPD")
-##' autoplot(coef(fit))
+##' autoplot(coef(fit, sd = TRUE))
 ##' autoplot(coef(fitJit))
-##' 
+##' autoplot(coef(fitJit, sd = TRUE))
 autoplot.coef.RenouvTList <- function(object,
                                       facets,
                                       ...) {
 
     Threshold <- Value <- Param <- Sd <- NULL
-    
+
     df <- as.data.frame(unclass(object))
-    df <- data.frame(Threshold =  attr(object, "threshold"), df)
+    df <- data.frame(Threshold = attr(object, "threshold"), df)
     df <- tidyr::gather(df, key = "Param", value = "Value", -Threshold)
-    g <- ggplot(data = df)
-    g <- g + geom_point(mapping = aes(x = Threshold, y = Value, group = Param))
-    g <- g + geom_line(mapping = aes(x = Threshold, y = Value, group = Param))
-    g <- g + facet_grid(Param ~ ., scales="free_y", labeller = label_both)
-    g
-                        
+    
+    if (!attr(object, "sd")) {
+        g <- ggplot(data = df)
+        g <- g + geom_point(mapping = aes(x = Threshold, y = Value, group = Param))
+        g <- g + geom_line(mapping = aes(x = Threshold, y = Value, group = Param))
+        g <- g + facet_grid(Param ~ ., scales="free_y", labeller = label_both)
+        g
+    } else {
+        dfSigma <- data.frame(Threshold = attr(object, "threshold"),
+                              attr(object, "sigma"))
+        dfSigma <- tidyr::gather(dfSigma, key = "Param", value = "Sd", -Threshold)
+        df <- merge(df, dfSigma, by = c("Threshold", "Param"))
+        Two <- qnorm(0.975)
+        df <- within(df, {
+            L <- Value - Two * Sd;
+            U <- Value + Two * Sd
+        })
+        g <- ggplot(data = df)
+        g <- g + geom_ribbon(mapping = aes(x = Threshold, ymin = L, ymax = U,
+                                           group = Param), fill = "SteelBlue1",
+                             alpha = 0.3)
+        g <- g + geom_point(mapping = aes(x = Threshold, y = Value, group = Param))
+        g <- g + geom_line(mapping = aes(x = Threshold, y = Value, group = Param))
+        g <- g + facet_grid(Param ~ ., scales="free_y", labeller = label_both)
+        g
+    }
+
 }
 
 ## ****************************************************************************

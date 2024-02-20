@@ -4,7 +4,7 @@
 \alias{coef.RenouvTList}
 \title{Coefficients of a \code{RenouvTList} Object}
 \usage{
-\method{coef}{RenouvTList}(object, reParam, lambda = TRUE, ...)
+\method{coef}{RenouvTList}(object, reParam, lambda = TRUE, sd = TRUE, ...)
 }
 \arguments{
 \item{object}{An object with class \code{"RenouvTList"} as created
@@ -23,6 +23,11 @@ that the distribution is specified by using the
 in the results. The choice \code{FALSE} is relevant for
 threshold stability analyzes.}
 
+\item{sd}{Logical. If \code{TRUE} the result is a list of
+\emph{two} matrices: one for the estimates and one for the
+standard deviations of these, a.k.a. the \emph{standard
+errors}.}
+
 \item{...}{Not used yet.}
 }
 \value{
@@ -32,6 +37,13 @@ A numeric matrix with its rows corresponding to the
 \description{
 Coefficients of a \code{RenouvTList} Object
 }
+\section{Caution}{
+ the confidence intervals are obtained by using
+    the "delta" method. The intervals are known to have a coverage
+    rate which is smaller than the expected rate when the
+    Generalised Pareto Distribution is used.
+}
+
 \examples{
 fit <- RenouvTList(Garonne,
                    threshold = seq(from = 2401, to = 3001, by = 10),

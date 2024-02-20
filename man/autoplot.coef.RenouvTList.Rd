@@ -24,6 +24,12 @@ A \code{ggplot} object.
 Build a \code{ggplot} for the Coeficients of a
     \code{RenouvTList} Object
 }
+\details{
+Build a \code{ggplot} object for the coefficients of a
+    \code{RenouvTList} object. If the \code{coef.RenouvTList} was
+    called with \code{sd = TRUE} then the confidence intervals on
+    the coefficients will be shown as a ribbon.
+}
 \examples{
 fit <- RenouvTList(Garonne,
                    threshold = seq(from = 2401, to = 3001, by = 10),
@@ -31,11 +37,10 @@ fit <- RenouvTList(Garonne,
 fitJit <- RenouvTList(GaronneJit,
                       threshold = seq(from = 2401, to = 3001, by = 10),
                       distname.y = "GPD")
-autoplot(coef(fit))
+autoplot(coef(fit, sd = TRUE))
 autoplot(coef(fitJit))
-
+autoplot(coef(fitJit, sd = TRUE))
 }
 \seealso{
-\code{\link{autoplot.coSd.RenouvTList}} for an
-    \code{autoplot} method showing conficence intervals.
+\code{\link{coef.RenouvTList}}.
 }

@@ -9,6 +9,16 @@
 
 ## Enhancements
 
+- The `coef` method of the `"RenouvTList"` class now has a `sd` formal
+  argument which makes it work as the former `coSd` method which is
+  now deprecated.
+  
+- The `RenouvTList` function/creator now has a `start.par.ini`
+  argument which can be a matrix or a list of lists. This can be used
+  to give initial values for the parameters that differ across
+  thresholds as required with the `EGPD3` distribution for the
+  excesses.
+
 - In the `autoplot` method for the class `Renouv`, the confidence
   intervals are identified in the legend by the linetype of their
   borders, not by the fill.
@@ -17,3 +27,4 @@
   block names that could have been specified at the creation time
   through the names of the `MAX.data` or `OTS.data` are now duely
   shown.
+

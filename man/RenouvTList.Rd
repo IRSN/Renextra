@@ -10,6 +10,7 @@ RenouvTList(
   effDuration = NULL,
   distname.y = "GPD",
   loopIni = FALSE,
+  start.par.y = NULL,
   ...
 )
 }
@@ -28,6 +29,20 @@ converged cases obtained before. This is mainy useful in the
 cas where historical data are used, because no convergence
 problems should arise as long as no historical/censored
 observations are used. \bold{NOT IMPLEMENTED YET}.}
+
+\item{start.par.y}{Used to provide the parameter names and initial
+values in \code{\link[Renext]{Renouv}} when the distribution
+is not one of the special distributions. This can be either a
+single vector of initial values to be used for all thresholds,
+or a collection of initial values, one by threshold. In the
+first case, \code{start.par.y} must be a named numeric vector
+or a named list to be passed as the \code{start.par.y}
+argument of \code{\link{Renouv}}. In the second case, one must
+use either a numeric matrix with \code{length(threshold)}
+rows, or a list of \code{length(threshold)} numeric vectors or
+lists. The argument to be passed to \code{\link{Renouv}} will
+then be given by looping over the rows of the matrix or over
+the elements of the list.}
 
 \item{...}{Further arguments to be passed to
 \code{\link{Renouv}}. Graphical arguments should not be used.}
@@ -65,15 +80,30 @@ fit <- RenouvTList(Garonne,
 
 methods(class = "RenouvTList")
 autoplot(predict(fit))
-autoplot(coSd(fit))
+autoplot(coef(fit))
 
 ## Use more thresholds and compare with the jittered data
 fit <- RenouvTList(Garonne,
                    threshold = seq(from = 2401, to = 3001, by = 10),
                    distname.y = "GPD")
-autoplot(coSd(fit))
+autoplot(coef(fit))
 fitJit <- RenouvTList(GaronneJit,
                       threshold = seq(from = 2401, to = 3001, by = 10),
                       distname.y = "GPD")
-autoplot(coSd(fitJit))
+autoplot(coef(fitJit))
+
+## Use an Extended GP Distribution fo the excesses. To get initial values
+## for the parameters, we add a column of ones to the coefficients of
+## 'fitJit'. Note that we must use `reParam = FALSE` to match the names
+## of the parameters of the Renext GPD.
+fitJit0 <- RenouvTList(GaronneJit,
+                       threshold = seq(from = 2401, to = 3001, by = 50),
+                       distname.y = "GPD")
+spy <- cbind(kappa = 1.0, coef(fitJit0, reParam = FALSE))
+\dontrun{
+fitJit1 <- RenouvTList(GaronneJit,
+                       threshold = seq(from = 2401, to = 3001, by = 50),
+                       distname.y = "EGPD3", start.par.y = spy)
+autoplot(fitJit1)
+}
 }
