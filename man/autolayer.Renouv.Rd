@@ -30,7 +30,10 @@ Create a \code{ggplot} layer appropriate to represent
     part of the information stored in a \code{Renouv} object.
 }
 \details{
-\itemize{
+OLD CODE!!!
+
+
+   \itemize{
         \item{\code{"quant"} }{Show the quantile (a.k.a return level) line.}
         \item{\code{"conf"} }{Show the confidence interval(s).}
         \item{\code{"allObs"} }{Show all the observations: OT and historical \code{MAX} or
@@ -47,6 +50,8 @@ g +  autolayer(fit3, which = "quant")
 g <- autoplot(fit3, show = list(conf = TRUE), lev = c(0.70, 0.95))
 g +  autolayer(fit3, which = "quant")
 g <- autoplot(fit3, show = list(quant = TRUE))
-g +  autolayer(fit3, which = "allObs") + autolayer(fit3, which = "emptyOTS")
+## use a new scale to avoid errors
+g +  ggnewscale::new_scale_colour( ) + autolayer(fit3, which = "allObs")
+g + autolayer(fit3, which = "emptyOTS")
 
 }

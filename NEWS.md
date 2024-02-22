@@ -9,6 +9,10 @@
 
 ## Enhancements
 
+- The `autoplot` method for the `"Renouv"` class now provides better
+  legend "guides" and allows the user to change the colours,
+  linetypes, ...
+
 - The `coef` method of the `"RenouvTList"` class now has a `sd` formal
   argument which makes it work as the former `coSd` method which is
   now deprecated.

@@ -11,7 +11,7 @@
 ##'
 ##' @details Although this method can be viewed as as substitute of
 ##'     \code{\link[Renext]{plot.Renouv}} method of \pkg{Renext}, some
-##'     differences in the appearence result from the use of
+##'     differences in the appearance result from the use of
 ##'     \pkg{ggplot2} instead of \pkg{graphics}. The content of the
 ##'     legend(s) can be quite different from that of the single
 ##'     legend obtained with \code{plot.Renouv}. Note that one can
@@ -24,7 +24,9 @@
 ##' @param object An object with class \code{"Renouv"} representing a
 ##'     fitted Marked Poisson process model.
 ##'
-##' @param level The confidence level.
+##' @param level The confidence level. A numeric vector \emph{with
+##'     length} \code{1} or \code{2} containing the confidence levels
+##'     e.g., \code{0.95} or \code{c(0.95, 0.70)}.
 ##'
 ##' @param show A named list describing the elements to be shown. A
 ##'     missing information is equivalent to \code{FALSE}. The value
@@ -33,6 +35,12 @@
 ##'     is for the confidence interval(s) and the element
 ##'     \code{"allObs"} is for the observations.
 ##'
+##' @param pct.conf Logical. If \code{TRUE} the legend will show each
+##'     confidence levels as a percent. If \code{FALSE}, one use
+##'     instead a (decimal) level. The percents are rounded to the
+##'     next integer and the levels are rounded to two decimal place
+##'     in the displayed legend, but not in the computation.
+##' 
 ##' @param posOptions A named list of arguments to be passed to the
 ##'     \code{\link{allObs.Renouv}} and then to the
 ##'     \code{\link[Renext]{SandT}} function. Mind that in order to be
@@ -45,6 +53,10 @@
 ##'
 ##' @param byBlockStyle As in \code{\link{plot.Renouv}}.
 ##'
+##' @param quant.col,conf.col,conf.fill,conf.lty,obs.col,obs.fill,obs.shape
+##'     Can be used to change or set the graphical parameters such as
+##'     colours. This remains experimental and some change may occur.
+##' 
 ##' @param ... Not used yet.
 ##'
 ##' @method autoplot Renouv
@@ -58,17 +70,41 @@
 ##' autoplot(fit3)
 ##' autoplot(fit3, byBlockStyle = list(OTS = FALSE))
 ##' autoplot(fit3, level = c(0.7, 0.90))
+##'
+##' ## Using fictious historical information
+##' fit <- Renouv(x = GaronneJit$OTdata$Flow,
+##'               effDuration = GaronneJit$OTinfo$effDuration,
+##'               threshold = 3500, dist = "GPD",
+##'               MAX.data = list(Hist1 = c(7500, 6947),
+##'                               Hist2 = c(6200, 6470, 7010),
+##'                               Hist3 = c(7800)),
+##'               MAX.effDuration = c(100, 150, 190), plot = FALSE)
+##' autoplot(fit)
+##' autoplot(fit, pct = FALSE)
+##' autoplot(fit, level = 0.95)
+##' autoplot(fit, quant.col = "chartreuse")
+##' ## control the shown elements
+##' autoplot(fit, level = c(0.95, 0.70), quant.col = "cyan",
+##'          show = list(quant = FALSE, conf = TRUE))
+##' autoplot(fit, level = 0.95, quant.col = "orchid",
+##'          show = list(quant = TRUE, conf = FALSE))
+##' autoplot(fit, level = 0.95, quant.col = "orchid",
+##'          show = list(quant = TRUE, conf = TRUE, allObs = FALSE))
+##' 
 autoplot.Renouv <- function(object,
-                            level = 0.95,
+                            level = c(0.70, 0.95),
                             show = list(quant = TRUE, conf = TRUE, allObs = TRUE),
+                            pct.conf = TRUE,
                             posOptions = NULL,
                             byBlockStyle = NULL,
+                            quant.col = "OrangeRed",
+                            conf.col = "SteelBlue3",
+                            conf.fill = translude(c("SteelBlue1", "SteelBlue3"), alpha = 0.3),
+                            conf.lty = c("dashed", "dotted"),
+                            obs.col = c("black", "orangered", "ForestGreen", "orchid"),
+                            obs.fill = c("black", "gold", "Chartreuse", "pink"),
+                            obs.shape = c(16, 21, 24, 23),
                             ...) {
-
-    col.quant <- "ForestGreen"
-    col.conf <- "SteelBlue3"
-    fill.conf <- translude(c("SteelBlue1", "SteelBlue3"), alpha = 0.3)
-    lty.conf <- c("dashed", "dotted")
     
     Period <- Quantile <- U <- L <- Group <- Level <- NULL
     x <- xend <- y <- yend <- NULL
@@ -78,34 +114,55 @@ autoplot.Renouv <- function(object,
     }
     
     lambdaHat <- coef(object)["lambda"]
-
+    
     ## =========================================================================
     ## Compute predictions. Unlike the plot method, this is done in
     ## order to control the confidence level(s). Also the results are
     ## turned into a table in long format. The ribbons are plotted in the
     ## decreasing confidence order.
     ## =========================================================================
-    
-    ## periods <- as.vector(outer(c(0.1, 1, 2, 3, 5, 7, 10.10), c(1, 10, 100)))
-    ## periods <- sort(c(periods, 1000))
-
+   
     logGrid <- seq(from = -log(coef(object)["lambda"], base = 10) + 1e-6,
                    to = log(1100, base = 10),
                    length.out = 100)
-  
+    
     periods <- 10^logGrid
-
+    
     L <- lapply(level, function(lev) {
         p <- predict(object, level = lev, newdata = periods)
         names(p) <- c("Period", "Quantile", "L", "U")
         cbind(p, Level = lev)
     })
     
+    if (isTRUE(show$quant)) {
+        LQ <- within(L[[1]], {
+            L <- Quantile;
+            U <-  Quantile;
+            Level = 0.0
+        })
+        L[[length(L) + 1]] <- LQ
+        lty <- c("solid", conf.lty)
+        col <- c(quant.col, conf.col, conf.col)
+    } else {
+        lty <- conf.lty
+        col <- c(conf.col, conf.col)
+    }
+    
     pred <- as.data.frame(data.table::rbindlist(L))
-    levs <- rev(unique(format(pred$Level)))
-    pred <- within(pred, Level <- factor(format(Level), levels = levs))
+    if (pct.conf) {
+        pred$LevelText <- sprintf("%2d%% conf.", 100 * pred$Level)
+    } else {
+        pred$LevelText <- sprintf("%4.2f conf.", pred$Level)
+    }
 
-    ## ## =========================================================================
+    levs <- rev(unique(pred$LevelText))
+    pred <- within(pred, LevelText <- ordered(format(LevelText), levels = levs))
+    
+    if (isTRUE(show$quant)) {
+        levels(pred$LevelText)[1] <- "quantile"
+    }
+    
+    ## =========================================================================
     ## ## Compute the plotting positions for the "points".
     ## ## =========================================================================
     
@@ -120,39 +177,53 @@ autoplot.Renouv <- function(object,
     g <- g + scale_x_log10()
     
     if (isTRUE(show$conf)) {
-        g <- g + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U,
-                                           fill = Level, linetype = Level),
+        g <- g + geom_ribbon(data = subset(pred, Level != 0), 
+                             mapping = aes(x = Period, ymin = L, ymax = U,
+                                           fill = LevelText, linetype = LevelText),
                              colour = "darkgray", show.legend = FALSE)
+        g <- g +   scale_fill_manual(values = conf.fill)
         ## 2 new layers
-        g <- g + geom_line(mapping = aes(x = Period, y = L, linetype = Level),
-                           colour = col.conf)
-        g <- g + geom_line(mapping = aes(x = Period, y = U, linetype = Level),
-                             colour = col.conf)
-        g <- g + scale_fill_manual(values = fill.conf) +
-            scale_linetype_manual(values = lty.conf)
-    }
+        g <- g + geom_line(data = subset(pred, Level != 0),
+                           mapping = aes(x = Period, y = L,
+                                         linetype = LevelText, colour = LevelText))
+        
+        g <- g + geom_line(data = subset(pred, Level != 0),
+                           mapping = aes(x = Period, y = U,
+                                         linetype = LevelText, colour = LevelText))
 
-    if (isTRUE(show$quant)) {
-        g <- g + geom_line(mapping = aes(x = Period, y = Quantile),
-                           colour = col.quant )
+        ## g <- g + scale_fill_manual(values = conf.fill) +
+        ##    scale_linetype_manual(values = conf.lty)
+
     }
     
+    if (isTRUE(show$quant)) {
+        g <- g + geom_line(data = subset(pred, Level == 0),
+                           mapping = aes(x = Period, y = L,
+                                         linetype = LevelText, colour = LevelText))
+    }
+    g <- g + scale_linetype_manual(values = lty, breaks = levels(pred$LevelText)) +
+        scale_colour_manual(values = col, breaks = levels(pred$LevelText))
+
+    ## For ONE legend for the two cues 'linetype' and 'colour'
+    g <- g + labs(linetype = "", colour = "")
+
+
     if (isTRUE(show$allObs)) {
        
         g <- g + ggnewscale::new_scale_fill() 
+        g <- g + ggnewscale::new_scale_colour()
         
         g <- g + geom_point(data = L$dfST,
                             mapping = aes(x = Period, y = Quantile,
                                           shape = Group, col = Group,
                                           fill = Group),
                             stroke = 1.5)
-        ## g <- g + scale_fill_manual(values = c("black", "gold", "SpringGreen2", "SteelBlue2"))
-        g <- g + scale_shape_manual(values = c(16, 21, 24))
-        g <- g + scale_colour_manual(name = "Group",
-                                     values = c("black", "orangered", "ForestGreen"))
-        g <- g + scale_fill_manual(values = c("black", "gold", "Chartreuse"))
+        g <- g + scale_shape_manual(values = obs.shape)
+        g <- g + scale_colour_manual(name = "Group", values = obs.col)
+        g <- g + scale_fill_manual(values = obs.fill)
     }
-    g <- g + geom_hline(yintercept = object$threshold)
+    
+    g <- g + geom_hline(yintercept = object$threshold, col = "darkgrey")
 
     if (isTRUE(show$allObs) && nrow(L$dfSeg)) {
        
@@ -166,25 +237,130 @@ autoplot.Renouv <- function(object,
         g <- g + scale_colour_manual(name = "Group",
                                      values = c("orangered", "SpringGreen3"))
     }
-
+    
     g <- g + labs(x = "Period", y = "Quantile")
     
     g 
       
-}
-
-if (FALSE) {
-    huron <- data.frame(year = 1875:1972, level = as.vector(LakeHuron))
-    library(plyr) # to access round_any
-    huron$decade <- round_any(huron$year, 10, floor)
     
-    ggplot(huron, aes(x =year, group = decade)) + 
-        geom_ribbon(aes(ymin = level-1, ymax = level+1, 
-                        colour = factor(decade),
-                        linetype = factor(decade),
-                        fill = factor(decade)), 
-                    alpha= 0.1)
+    
 }
+##' OLD CODE!!!
+## autoplot.Renouv <- function(object,
+##                             level = 0.95,
+##                             show = list(quant = TRUE, conf = TRUE, allObs = TRUE),
+##                             posOptions = NULL,
+##                             byBlockStyle = NULL,
+##                             ...) {
+
+##     col.quant <- "ForestGreen"
+##     col.conf <- "SteelBlue3"
+##     fill.conf <- translude(c("SteelBlue1", "SteelBlue3"), alpha = 0.3)
+##     lty.conf <- c("dashed", "dotted")
+    
+##     Period <- Quantile <- U <- L <- Group <- Level <- NULL
+##     x <- xend <- y <- yend <- NULL
+    
+##     if (length(level) > 2) {
+##         stop("the number of confidence levels must be <= 2")
+##     }
+    
+##     lambdaHat <- coef(object)["lambda"]
+
+##     ## =========================================================================
+##     ## Compute predictions. Unlike the plot method, this is done in
+##     ## order to control the confidence level(s). Also the results are
+##     ## turned into a table in long format. The ribbons are plotted in the
+##     ## decreasing confidence order.
+##     ## =========================================================================
+    
+##     ## periods <- as.vector(outer(c(0.1, 1, 2, 3, 5, 7, 10.10), c(1, 10, 100)))
+##     ## periods <- sort(c(periods, 1000))
+
+##     logGrid <- seq(from = -log(coef(object)["lambda"], base = 10) + 1e-6,
+##                    to = log(1100, base = 10),
+##                    length.out = 100)
+  
+##     periods <- 10^logGrid
+
+##     L <- lapply(level, function(lev) {
+##         p <- predict(object, level = lev, newdata = periods)
+##         names(p) <- c("Period", "Quantile", "L", "U")
+##         cbind(p, Level = lev)
+##     })
+    
+##     pred <- as.data.frame(data.table::rbindlist(L))
+##     levs <- rev(unique(format(pred$Level)))
+##     pred <- within(pred, Level <- factor(format(Level), levels = levs))
+
+##     ## ## =========================================================================
+##     ## ## Compute the plotting positions for the "points".
+##     ## ## =========================================================================
+    
+##     L <- allObs.Renouv(object, byBlockStyle = byBlockStyle,
+##                        posOptions = posOptions)
+    
+##     ## =========================================================================
+##     ## Now let us build the layers of the ggplot  
+##     ## =========================================================================
+    
+##     g <- ggplot(data = pred)
+##     g <- g + scale_x_log10()
+    
+##     if (isTRUE(show$conf)) {
+##         g <- g + geom_ribbon(mapping = aes(x = Period, ymin = L, ymax = U,
+##                                            fill = Level, linetype = Level),
+##                              colour = "darkgray", show.legend = FALSE)
+##         ## 2 new layers
+##         g <- g + geom_line(mapping = aes(x = Period, y = L, linetype = Level),
+##                            colour = col.conf)
+##         g <- g + geom_line(mapping = aes(x = Period, y = U, linetype = Level),
+##                              colour = col.conf)
+##         g <- g + scale_fill_manual(values = fill.conf) +
+##             scale_linetype_manual(values = lty.conf)
+##     }
+
+##     if (isTRUE(show$quant)) {
+##         g <- g + geom_line(mapping = aes(x = Period, y = Quantile),
+##                            colour = col.quant)
+##     }
+    
+##     if (isTRUE(show$allObs)) {
+       
+##         g <- g + ggnewscale::new_scale_fill() 
+        
+##         g <- g + geom_point(data = L$dfST,
+##                             mapping = aes(x = Period, y = Quantile,
+##                                           shape = Group, col = Group,
+##                                           fill = Group),
+##                             stroke = 1.5)
+##         ## g <- g + scale_fill_manual(values = c("black", "gold", "SpringGreen2", "SteelBlue2"))
+##         g <- g + scale_shape_manual(values = c(16, 21, 24))
+##         g <- g + scale_colour_manual(name = "Group",
+##                                      values = c("black", "orangered", "ForestGreen"))
+##         g <- g + scale_fill_manual(values = c("black", "gold", "Chartreuse"))
+##     }
+    
+##     g <- g + geom_hline(yintercept = object$threshold)
+
+##     if (isTRUE(show$allObs) && nrow(L$dfSeg)) {
+       
+##         g <- g + ggnewscale::new_scale_colour() 
+##         g <- g + geom_segment(data = L$dfSeg,
+##                               mapping = aes(x = x, xend = xend,
+##                                             y = y, yend = yend,
+##                                             colour = Group,
+##                                             group = Group),
+##                               linetype = 2, size = 0.9)
+##         g <- g + scale_colour_manual(name = "Group",
+##                                      values = c("orangered", "SpringGreen3"))
+##     }
+
+##     g <- g + labs(x = "Period", y = "Quantile")
+    
+##     g 
+      
+## }
 
 ##' @description Create a \code{ggplot} layer appropriate to represent
 ##'     part of the information stored in a \code{Renouv} object.
@@ -224,7 +400,9 @@ if (FALSE) {
 ##' g <- autoplot(fit3, show = list(conf = TRUE), lev = c(0.70, 0.95))
 ##' g +  autolayer(fit3, which = "quant")
 ##' g <- autoplot(fit3, show = list(quant = TRUE))
-##' g +  autolayer(fit3, which = "allObs") + autolayer(fit3, which = "emptyOTS")
+##' ## use a new scale to avoid errors
+##' g +  ggnewscale::new_scale_colour( ) + autolayer(fit3, which = "allObs")
+##' g + autolayer(fit3, which = "emptyOTS")
 ##' 
 autolayer.Renouv <- function(object,
                              level = 0.95,
@@ -237,8 +415,12 @@ autolayer.Renouv <- function(object,
     x <- xend <- y <- yend <- NULL
  
     which <- match.arg(which)
-    periods <- as.vector(outer(c(1, 2, 3, 5, 7, 10.10), c(1, 10, 100)))
-
+    ## periods <- as.vector(outer(c(1, 2, 3, 5, 7, 10.10), c(1, 10, 100)))
+    logGrid <- seq(from = -log(coef(object)["lambda"], base = 10) + 1e-6,
+                   to = log(1100, base = 10),
+                   length.out = 100)
+    periods <- 10^logGrid
+    
     L <- lapply(level, function(lev) {
         p <- predict(object, level = lev, newdata = periods)
         names(p) <- c("Period", "Quantile", "L", "U")
@@ -248,7 +430,6 @@ autolayer.Renouv <- function(object,
     pred <- as.data.frame(data.table::rbindlist(L))
     levs <- rev(unique(format(pred$Level)))
     pred <- within(pred, Level <- factor(format(Level), levels = levs))
-
 
     if (which %in% c("allObs", "emptyOTS")) {
          L <- allObs.Renouv(object, byBlockStyle = byBlockStyle)
@@ -264,13 +445,15 @@ autolayer.Renouv <- function(object,
                     colour = "darkgray",
                     ...)
     } else if (which == "allObs") {
-        ggnewscale::new_scale_colour( )
+        
         ggnewscale::new_scale_fill( )
+        ggnewscale::new_scale_colour( )
         geom_point(data = L$dfST,
                    mapping = aes(x = Period, y = Quantile,
-                                 shape = Group, col = Group,
+                                 shape = Group,
+                                 col = Group,
                                  fill = Group),
-                   stroke = 1.5, ...)
+                   stroke = 1.5, ...) 
     } else if (which == "emptyOTS") {
         if (nrow(L$dfSeg)) {
             geom_segment(data = L$dfSeg,

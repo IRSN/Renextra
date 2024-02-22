@@ -22,3 +22,8 @@
       generic), and use simply `coef(object, sd = TRUE)` instead. It
       should be mentioned in the documentation that with `sd = TRUE`
       the returned object is a list of two matrices.
+
+- [ ] Use the graphical parameters defined with `Renext::RLpar` with
+      the `autoplot` and `autolayer` methods? If so the arguments of
+      `autoplot.Renouv` devoted to the graphical parameters should be
+      discarded.

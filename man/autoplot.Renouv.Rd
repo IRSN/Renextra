@@ -6,10 +6,18 @@
 \usage{
 \method{autoplot}{Renouv}(
   object,
-  level = 0.95,
+  level = c(0.7, 0.95),
   show = list(quant = TRUE, conf = TRUE, allObs = TRUE),
+  pct.conf = TRUE,
   posOptions = NULL,
   byBlockStyle = NULL,
+  quant.col = "OrangeRed",
+  conf.col = "SteelBlue3",
+  conf.fill = translude(c("SteelBlue1", "SteelBlue3"), alpha = 0.3),
+  conf.lty = c("dashed", "dotted"),
+  obs.col = c("black", "orangered", "ForestGreen", "orchid"),
+  obs.fill = c("black", "gold", "Chartreuse", "pink"),
+  obs.shape = c(16, 21, 24, 23),
   ...
 )
 }
@@ -17,7 +25,9 @@
 \item{object}{An object with class \code{"Renouv"} representing a
 fitted Marked Poisson process model.}
 
-\item{level}{The confidence level.}
+\item{level}{The confidence level. A numeric vector \emph{with
+length} \code{1} or \code{2} containing the confidence levels
+e.g., \code{0.95} or \code{c(0.95, 0.70)}.}
 
 \item{show}{A named list describing the elements to be shown. A
 missing information is equivalent to \code{FALSE}. The value
@@ -25,6 +35,12 @@ of the element \code{"quant"} tells if the quantile (or return
 level) line is to be shown or not. The element \code{"conf"}
 is for the confidence interval(s) and the element
 \code{"allObs"} is for the observations.}
+
+\item{pct.conf}{Logical. If \code{TRUE} the legend will show each
+confidence levels as a percent. If \code{FALSE}, one use
+instead a (decimal) level. The percents are rounded to the
+next integer and the levels are rounded to two decimal place
+in the displayed legend, but not in the computation.}
 
 \item{posOptions}{A named list of arguments to be passed to the
 \code{\link{allObs.Renouv}} and then to the
@@ -38,6 +54,9 @@ and these positions are biassed.}
 
 \item{byBlockStyle}{As in \code{\link{plot.Renouv}}.}
 
+\item{quant.col, conf.col, conf.fill, conf.lty, obs.col, obs.fill, obs.shape}{Can be used to change or set the graphical parameters such as
+colours. This remains experimental and some change may occur.}
+
 \item{...}{Not used yet.}
 }
 \description{
@@ -50,7 +69,7 @@ return levels.
 \details{
 Although this method can be viewed as as substitute of
     \code{\link[Renext]{plot.Renouv}} method of \pkg{Renext}, some
-    differences in the appearence result from the use of
+    differences in the appearance result from the use of
     \pkg{ggplot2} instead of \pkg{graphics}. The content of the
     legend(s) can be quite different from that of the single
     legend obtained with \code{plot.Renouv}. Note that one can
@@ -63,4 +82,25 @@ example(Renouv, ask = FALSE, echo = FALSE)
 autoplot(fit3)
 autoplot(fit3, byBlockStyle = list(OTS = FALSE))
 autoplot(fit3, level = c(0.7, 0.90))
+
+## Using fictious historical information
+fit <- Renouv(x = GaronneJit$OTdata$Flow,
+              effDuration = GaronneJit$OTinfo$effDuration,
+              threshold = 3500, dist = "GPD",
+              MAX.data = list(Hist1 = c(7500, 6947),
+                              Hist2 = c(6200, 6470, 7010),
+                              Hist3 = c(7800)),
+              MAX.effDuration = c(100, 150, 190), plot = FALSE)
+autoplot(fit)
+autoplot(fit, pct = FALSE)
+autoplot(fit, level = 0.95)
+autoplot(fit, quant.col = "chartreuse")
+## control the shown elements
+autoplot(fit, level = c(0.95, 0.70), quant.col = "cyan",
+         show = list(quant = FALSE, conf = TRUE))
+autoplot(fit, level = 0.95, quant.col = "orchid",
+         show = list(quant = TRUE, conf = FALSE))
+autoplot(fit, level = 0.95, quant.col = "orchid",
+         show = list(quant = TRUE, conf = TRUE, allObs = FALSE))
+
 }
