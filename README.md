@@ -31,18 +31,19 @@ distribution can be used along with `kappa = 1.0`, see the examples.
 ## Installing
 
 Provided that the **remotes** package is installed, the installation of
-**Renextra** from github can be done by using
+**Renextra** using the giHub source can be obtained by
 
 ``` r
 library(remotes)
-install_github("yvesdeville/Renextra", dependencies = TRUE, auth_token = myToken)
+install_github("https://github.com/IRSN/Renextra")
 ```
-
-where `myToken` is *your* token.
 
 You can also select a specific branch or a specific commit by using the
 suitable syntax for `install_github`, see the **remotes** package
 documentation.
+
+The package should soon be available in pre-compiled form (including  
+`.zip` files for Windows) the **Relases** section.
 
 ## Examples
 
@@ -90,16 +91,16 @@ data are provided by the **mev** package.
     ## u = 120  0.686 [0.140] 101.478 [49.078] -0.249 [0.238]
     ## u = 130  0.629 [0.134] 77.930 [57.890]  -0.142 [0.294]
     ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
-    ## o  Kolmogorov-Smirnov test
+    ## o Kolmogorov-Smirnov test
     ##           n      D p.value
-    ## u =  70 138 0.0750  0.4191
-    ## u =  80  86 0.0536  0.9545
-    ## u =  90  57 0.0752  0.8801
-    ## u = 100  39 0.1009  0.7848
-    ## u = 110  31 0.0989  0.8929
-    ## u = 120  24 0.1076  0.9162
-    ## u = 130  22 0.1144  0.9047
-    ## u = 140  18 0.1417  0.8146
+    ## u =  70 138 0.0750  0.4196
+    ## u =  80  86 0.0536  0.9547
+    ## u =  90  57 0.0747  0.8848
+    ## u = 100  39 0.1008  0.7856
+    ## u = 110  31 0.0987  0.8943
+    ## u = 120  24 0.1079  0.9148
+    ## u = 130  22 0.1138  0.9075
+    ## u = 140  18 0.1415  0.8154
 
 ``` r
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))
@@ -116,6 +117,10 @@ data are provided by the **mev** package.
                      distname.y = "EGPD3")
  autoplot(coSd(fitE, lambda = FALSE))
 ```
+
+    ## Warning: 'coSd.RenouvTList' est obsolète.
+    ## Utilisez plutôt ‘coef(object, sd = TRUE)’.
+    ## Voir help("Deprecated")
 
 ![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 

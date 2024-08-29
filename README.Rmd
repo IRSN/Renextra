@@ -37,18 +37,20 @@ The present features of **Renextra** are
 ## Installing
 
 Provided that the **remotes** package is installed, the installation of
-**Renextra** from github can be done by using
+**Renextra** using the giHub source can be obtained by
 
 
 ```{r, eval=FALSE}
 library(remotes)
-install_github("yvesdeville/Renextra", dependencies = TRUE, auth_token = myToken)
+install_github("https://github.com/IRSN/Renextra")
 ```
-where `myToken` is *your* token. 
 
 You can also select a specific branch or a specific commit by using
 the suitable syntax for `install_github`, see the **remotes** package
 documentation.
+
+The package should soon be available in pre-compiled form (including  
+`.zip` files for Windows) the **Relases** section.
 
 ## Examples
 
