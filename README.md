@@ -43,7 +43,7 @@ suitable syntax for `install_github`, see the **remotes** package
 documentation.
 
 The package should soon be available in pre-compiled form (including  
-`.zip` files for Windows) the **Relases** section.
+`.zip` a file for Windows) the **Releases** section.
 
 ## Examples
 
@@ -54,10 +54,23 @@ The `GaronneJit` data object is a `Rendata` object derived from the
 
 ``` r
 library(Renextra)
+class(GaronneJit)
+```
+
+    ## [1] "Rendata"
+
+``` r
 autoplot(GaronneJit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- --> The object
+has class `"Rendata"` and describes both so-called *systematic* and
+*historical* observations. An `autoplot` method is made available for
+this class by **Renextra**.
+
+When the object is used as the first argument of `Renouv` all the
+observations are used in the fit. **Renextra** adds an `autoplot` method
+for the `"Renouv"` class, producting a ggplot
 
 ``` r
 fitGJ <- Renouv(GaronneJit, threshold = 3200, distname.y = "GPD", plot = FALSE)
@@ -93,14 +106,14 @@ data are provided by the **mev** package.
     ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
     ## o Kolmogorov-Smirnov test
     ##           n      D p.value
-    ## u =  70 138 0.0750  0.4196
-    ## u =  80  86 0.0536  0.9547
-    ## u =  90  57 0.0747  0.8848
-    ## u = 100  39 0.1008  0.7856
-    ## u = 110  31 0.0987  0.8943
-    ## u = 120  24 0.1079  0.9148
-    ## u = 130  22 0.1138  0.9075
-    ## u = 140  18 0.1415  0.8154
+    ## u =  70 138 0.0750  0.4187
+    ## u =  80  86 0.0537  0.9541
+    ## u =  90  57 0.0748  0.8835
+    ## u = 100  39 0.1013  0.7813
+    ## u = 110  31 0.0989  0.8930
+    ## u = 120  24 0.1077  0.9158
+    ## u = 130  22 0.1139  0.9073
+    ## u = 140  18 0.1412  0.8177
 
 ``` r
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))
@@ -115,12 +128,8 @@ data are provided by the **mev** package.
                      threshold = seq(from = 65.08, to = 88.61, len = 40),
                      start.par.y = c(scale = 30, shape = 0.0, kappa = 1.0),
                      distname.y = "EGPD3")
- autoplot(coSd(fitE, lambda = FALSE))
+ autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
 ```
-
-    ## Warning: 'coSd.RenouvTList' est obsolète.
-    ## Utilisez plutôt ‘coef(object, sd = TRUE)’.
-    ## Voir help("Deprecated")
 
 ![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 

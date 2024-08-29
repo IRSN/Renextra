@@ -50,7 +50,7 @@ the suitable syntax for `install_github`, see the **remotes** package
 documentation.
 
 The package should soon be available in pre-compiled form (including  
-`.zip` files for Windows) the **Relases** section.
+`.zip` a file for Windows) the **Releases** section.
 
 ## Examples
 
@@ -61,8 +61,15 @@ The `GaronneJit` data object is a `Rendata` object derived from the
 
 ```{r, message=FALSE, fig.height=4}
 library(Renextra)
+class(GaronneJit)
 autoplot(GaronneJit)
 ```
+The object has class `"Rendata"` and describes both so-called *systematic* 
+and *historical* observations. An `autoplot` method is made available for this class by **Renextra**.
+
+When the object is used as the first argument of `Renouv` all the
+observations are used in the fit. **Renextra** adds an `autoplot`
+method for the `"Renouv"` class, producting a ggplot
 
 ```{r, message=FALSE, fig.height=4}
 fitGJ <- Renouv(GaronneJit, threshold = 3200, distname.y = "GPD", plot = FALSE)
@@ -88,7 +95,7 @@ are provided by the **mev** package.
                      threshold = seq(from = 65.08, to = 88.61, len = 40),
                      start.par.y = c(scale = 30, shape = 0.0, kappa = 1.0),
                      distname.y = "EGPD3")
- autoplot(coSd(fitE, lambda = FALSE))
+ autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
 
 ```
  
