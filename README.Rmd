@@ -79,7 +79,9 @@ autoplot(fitGJ)
 ### Nidd River 
 
 The Nidd river example has been used in Davison and Smith (1990). The data 
-are provided by the **mev** package.
+are provided by the **mev** package. We fit using a standard Generalized 
+Pareto for the excesses and then using an Exendended Generalized Pareto
+as in Papastathopoulos and Tawn (1013).
 
 ```{r, message=FALSE, fig.height=4}
  library(mev)
@@ -95,6 +97,15 @@ are provided by the **mev** package.
                      threshold = seq(from = 65.08, to = 88.61, len = 40),
                      start.par.y = c(scale = 30, shape = 0.0, kappa = 1.0),
                      distname.y = "EGPD3")
+ autoplot(fitE, show = list(quant = TRUE, allObs= TRUE))
+```
+Note that since a large number of thresholds have been used the color scale 
+is continuous rather than discrete as before.
+
+By autoplotting the coefficients of a `RenouvTList` object we get 
+hints on the threshold stability, especially regarding the shape coefficient.
+
+```{r, message=FALSE, fig.height=4}
  autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
 
 ```

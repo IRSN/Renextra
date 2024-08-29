@@ -82,7 +82,9 @@ autoplot(fitGJ)
 ### Nidd River
 
 The Nidd river example has been used in Davison and Smith (1990). The
-data are provided by the **mev** package.
+data are provided by the **mev** package. We fit using a standard
+Generalized Pareto for the excesses and then using an Exendended
+Generalized Pareto as in Papastathopoulos and Tawn (1013).
 
 ``` r
  library(mev)
@@ -106,14 +108,14 @@ data are provided by the **mev** package.
     ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
     ## o Kolmogorov-Smirnov test
     ##           n      D p.value
-    ## u =  70 138 0.0750  0.4187
-    ## u =  80  86 0.0537  0.9541
-    ## u =  90  57 0.0748  0.8835
-    ## u = 100  39 0.1013  0.7813
-    ## u = 110  31 0.0989  0.8930
-    ## u = 120  24 0.1077  0.9158
-    ## u = 130  22 0.1139  0.9073
-    ## u = 140  18 0.1412  0.8177
+    ## u =  70 138 0.0749  0.4205
+    ## u =  80  86 0.0536  0.9545
+    ## u =  90  57 0.0747  0.8842
+    ## u = 100  39 0.1004  0.7901
+    ## u = 110  31 0.0990  0.8927
+    ## u = 120  24 0.1079  0.9147
+    ## u = 130  22 0.1141  0.9061
+    ## u = 140  18 0.1424  0.8099
 
 ``` r
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))
@@ -128,10 +130,21 @@ data are provided by the **mev** package.
                      threshold = seq(from = 65.08, to = 88.61, len = 40),
                      start.par.y = c(scale = 30, shape = 0.0, kappa = 1.0),
                      distname.y = "EGPD3")
+ autoplot(fitE, show = list(quant = TRUE, allObs= TRUE))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- --> Note that
+since a large number of thresholds have been used the color scale is
+continuous rather than discrete as before.
+
+By autoplotting the coefficients of a `RenouvTList` object we get hints
+on the threshold stability, especially regarding the shape coefficient.
+
+``` r
  autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ## References
 
