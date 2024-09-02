@@ -246,7 +246,11 @@ coef.RenouvTList <- function(object, reParam, lambda = TRUE, sd = TRUE, ...) {
         attr(est, "sd") <- FALSE
     }
     
+    nb.OT <- sapply(fitJit, \(x) x$nb.OT)
+    
     attr(est, "threshold") <- attr(object, "threshold")
+    attr(est, "nb.OT") <- nb.OT
+    
     class(est) <- "coef.RenouvTList"
     est
     
