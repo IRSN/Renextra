@@ -26,7 +26,8 @@
 ##'     axis. This argument is actually passed as the `limits`
 ##'     argument of \code{\link[ggplot2]{scale_x_log10}}
 ##'     function. Note that the limits of the vertical axis can be set
-##'     in a standard way by using \code{+ ylim()}.
+##'     in a standard way by using \code{+ ylim()}, see
+##'     \code{\link[ggplot2]{ylim}}.
 ##' 
 ##' @param ... Not used yet
 ##'
@@ -156,6 +157,8 @@ autoplot.predict.RenouvTList <- function(object,
 ##' @method autoplot coef.RenouvTList
 ##' @export
 ##'
+##' @importFrom stats approx
+##' 
 ##' @examples
 ##' fit <- RenouvTList(Garonne,
 ##'                    threshold = seq(from = 2401, to = 3001, by = 10),
@@ -209,9 +212,9 @@ autoplot.coef.RenouvTList <- function(object,
     
     if (!attr(object, "lambda")) {
         invTrans <- function(n) {
-            approx(xout = n,
-                   x = attr(object, "nb.OT"),
-                   y = attr(object, "threshold"))$y
+            stats::approx(xout = n,
+                          x = attr(object, "nb.OT"),
+                          y = attr(object, "threshold"))$y
         }
         np <- pretty(attr(object, "nb.OT"))
         xp <- invTrans(np) 
