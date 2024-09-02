@@ -18,6 +18,7 @@
   obs.col = c("black", "orangered", "ForestGreen", "orchid"),
   obs.fill = c("black", "gold", "Chartreuse", "pink"),
   obs.shape = c(16, 21, 24, 23),
+  xlim = NULL,
   ...
 )
 }
@@ -56,6 +57,13 @@ and these positions are biassed.}
 
 \item{quant.col, conf.col, conf.fill, conf.lty, obs.col, obs.fill, obs.shape}{Can be used to change or set the graphical parameters such as
 colours. This remains experimental and some change may occur.}
+
+\item{xlim}{Optional vector of limits for the horizontal
+axise. This argument is actually passed as the `limits`
+argument of \code{\link[ggplot2]{scale_x_log10}} function.
+Note that the limits of the vertical axis can be set in a
+standard way by using \code{+ ylim()}, see
+\code{\link[ggplot2]{ylim}}.}
 
 \item{...}{Not used yet.}
 }

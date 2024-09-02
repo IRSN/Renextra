@@ -1,12 +1,26 @@
+
+# Changes in version 0.1.2
+
+## Enhancements
+
+- When the `autoplot` method is used for an object with class
+  `"coef.RenouvTList"` the number of exceedances is now displayed on a
+  second (top) horizontal axis. This is only possible when the object
+  was created using `lambda = FALSE`.
+
+- The autoplot methods for the classes `"Renouv"` and `"RenouvTList"`
+  both have a `xlim` argument. The motivation is that when using the
+  standard `+ xlim()` on a ggplot object with a log scale on the
+  x-axis, the log-scale is lost.
+
 # Changes in (pending) version 0.1.1
 
 ## Bug fix
 
 - In the `autoplot` method for the class `Renouv`, the grid of periods
-  used was chosen as starting at `1`. It now starts at `1 / lambda` 
-  as it should, where `lambda` is the rate `coef(objet)["rate"]`.
+  used was chosen as starting at `1`. It now starts at `1 / lambda` as
+  it should, where `lambda` is the rate `coef(objet)["rate"]`.
   
-
 ## Enhancements
 
 - The `autoplot` method for the `"Renouv"` class now provides better

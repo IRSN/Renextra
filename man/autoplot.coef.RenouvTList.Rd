@@ -26,9 +26,15 @@ Build a \code{ggplot} for the Coeficients of a
 }
 \details{
 Build a \code{ggplot} object for the coefficients of a
-    \code{RenouvTList} object. If the \code{coef.RenouvTList} was
-    called with \code{sd = TRUE} then the confidence intervals on
-    the coefficients will be shown as a ribbon.
+    \code{RenouvTList} object. If the \code{coef.RenouvTList}
+    method was called with \code{sd = TRUE} then the confidence
+    intervals on the coefficients will be shown as a ribbon. When
+    the \code{coef.RenouvTList} method was called with
+    \code{lambda = FALSE}, only the scale and shape parameters
+    are plotted against the threshold \eqn{u} yet the number of
+    exceedances \eqn{n_u} (which is a decreasing function of
+    \eqn{u}) is used on a second horizontal (top) axis. See
+    \emph{Examples}.
 }
 \examples{
 fit <- RenouvTList(Garonne,
@@ -40,6 +46,9 @@ fitJit <- RenouvTList(GaronneJit,
 autoplot(coef(fit, sd = TRUE))
 autoplot(coef(fitJit))
 autoplot(coef(fitJit, sd = TRUE))
+## when the `lambda` arg of `coef` is FALSE, the number of exceedances
+## is displayed on a second axis.
+autoplot(coef(fit, sd = TRUE, lambda = FALSE))
 }
 \seealso{
 \code{\link{coef.RenouvTList}}.
