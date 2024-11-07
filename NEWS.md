@@ -1,6 +1,9 @@
-# Changes in (pending) version 0.1.1
+# Changes in version 0.1.1
 
 ## Bug fix
+
+- The `RenouvTList` function no longer worked casting the error
+  "`fitJit not found`".
 
 - In the `autoplot` method for the class `Renouv`, the grid of periods
   used was chosen as starting at `1`. It now starts at `1 / lambda` 
