@@ -22,7 +22,7 @@ plotting positions i.e. of optional arguments to be passed to
 A list of two data frames that can be used with the
     \code{ggplot} function.
 
-\itemize{
+\describe{
    \item{\code{dfST} }{
 
        This data frame is to be used in a \code{geom_point} layer.

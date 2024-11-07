@@ -33,7 +33,7 @@ Create a \code{ggplot} layer appropriate to represent
 OLD CODE!!!
 
 
-   \itemize{
+   \describe{
         \item{\code{"quant"} }{Show the quantile (a.k.a return level) line.}
         \item{\code{"conf"} }{Show the confidence interval(s).}
         \item{\code{"allObs"} }{Show all the observations: OT and historical \code{MAX} or

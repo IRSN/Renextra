@@ -366,7 +366,7 @@ autoplot.Renouv <- function(object,
 ##'     part of the information stored in a \code{Renouv} object.
 ##' 
 ##' @details
-##'    \itemize{
+##'    \describe{
 ##'         \item{\code{"quant"} }{Show the quantile (a.k.a return level) line.}
 ##'         \item{\code{"conf"} }{Show the confidence interval(s).}
 ##'         \item{\code{"allObs"} }{Show all the observations: OT and historical \code{MAX} or
