@@ -49,6 +49,6 @@ autoplot(predict(fit))
                        threshold = seq(from = 65.08, to = 88.61, len = 40),
                        start.par.y = c(scale = 30, shape = 0.0, kappa = 1.0),
                        distname.y = "EGPD3")
-     autoplot(coSd(fitE, lambda = FALSE))
+     autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
 }
 }

@@ -26,7 +26,7 @@ The estimates of the POT parameters are plotted
 fitJit <- RenouvTList(GaronneJit,
                       threshold = seq(from = 2401, to = 3001, by = 100),
                       distname.y = "GPD")
-cs <- coSd(fitJit)
+cs <- coef(fitJit, sd = TRUE)
 autoplot(cs)
 
 

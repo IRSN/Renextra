@@ -45,7 +45,7 @@
 ##'                        threshold = seq(from = 65.08, to = 88.61, len = 40),
 ##'                        start.par.y = c(scale = 30, shape = 0.0, kappa = 1.0),
 ##'                        distname.y = "EGPD3")
-##'      autoplot(coSd(fitE, lambda = FALSE))
+##'      autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
 ##' }
 autoplot.predict.RenouvTList <- function(object,
                                          confInt = FALSE,
@@ -219,7 +219,7 @@ autoplot.coef.RenouvTList <- function(object,
 ##' fitJit <- RenouvTList(GaronneJit,
 ##'                       threshold = seq(from = 2401, to = 3001, by = 100),
 ##'                       distname.y = "GPD")
-##' cs <- coSd(fitJit)
+##' cs <- coef(fitJit, sd = TRUE)
 ##' autoplot(cs)
 ##'
 ##' 
