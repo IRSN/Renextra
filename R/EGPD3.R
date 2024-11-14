@@ -67,12 +67,13 @@
 ##'                    start.par.y = c(scale = 2000, shape = -0.2, kappa = 1.0))
 ##' autoplot(predict(fit))
 ##' ## Now use the 'EGPD3' distribution for the exceedances.
+##' \dontrun{
 ##' fitE <- RenouvTList(x = GaronneJit, distname.y = "EGPD3",
 ##'                    threshold = seq(from = 2401, to = 3001, by = 100),
 ##'                    start.par.y = c(scale = 2000, shape = -0.2, kappa = 1.0))
 ##' coef(fitE, reParam = FALSE)
 ##' autoplot(predict(fitE))
-##' 
+##' }
 dEGPD3 <- function(x, scale = 1.0, shape = 0.0, kappa = 1.0, log = FALSE) {
     ind <- (x > 0.0)
     f <- rep(0.0, length(x))
