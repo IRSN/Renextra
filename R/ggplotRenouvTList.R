@@ -22,6 +22,13 @@
 ##'     is useful when the number of thresholds is moderate, say
 ##'     \eqn{\leq 12}.
 ##'
+##' @param xlim An optional vector of limits for the horizontal
+##'     axis. This argument is actually passed as the `limits`
+##'     argument of \code{\link[ggplot2]{scale_x_log10}}
+##'     function. Note that the limits of the vertical axis can be set
+##'     in a standard way by using \code{+ ylim()}, see
+##'     \code{\link[ggplot2]{ylim}}.
+##' 
 ##' @param ... Not used yet
 ##'
 ##' @return A \code{ggplot} object.
@@ -50,6 +57,7 @@
 autoplot.predict.RenouvTList <- function(object,
                                          confInt = FALSE,
                                          facets,
+                                         xlim = NULL,
                                          ...) {
 
     Threshold <- Period <- Quantile <- Level <- L <- U <- NULL
@@ -106,7 +114,7 @@ autoplot.predict.RenouvTList <- function(object,
     
     ## g <- g + geom_hline(mapping = aes(yintercept = Threshold))
     
-    g <- g + scale_x_log10()
+    g <- g + scale_x_log10(limits = xlim)
     
     if (threshFact) {
         g <- g + scale_colour_brewer(palette = "Spectral")
@@ -120,9 +128,15 @@ autoplot.predict.RenouvTList <- function(object,
 ## ****************************************************************************
 
 ##' @details Build a \code{ggplot} object for the coefficients of a
-##'     \code{RenouvTList} object. If the \code{coef.RenouvTList} was
-##'     called with \code{sd = TRUE} then the confidence intervals on
-##'     the coefficients will be shown as a ribbon.
+##'     \code{RenouvTList} object. If the \code{coef.RenouvTList}
+##'     method was called with \code{sd = TRUE} then the confidence
+##'     intervals on the coefficients will be shown as a ribbon. When
+##'     the \code{coef.RenouvTList} method was called with
+##'     \code{lambda = FALSE}, only the scale and shape parameters
+##'     are plotted against the threshold \eqn{u} yet the number of
+##'     exceedances \eqn{n_u} (which is a decreasing function of
+##'     \eqn{u}) is used on a second horizontal (top) axis. See
+##'     \emph{Examples}.
 ##'
 ##' @title Build a \code{ggplot} for the Coeficients of a
 ##'     \code{RenouvTList} Object
@@ -143,6 +157,8 @@ autoplot.predict.RenouvTList <- function(object,
 ##' @method autoplot coef.RenouvTList
 ##' @export
 ##'
+##' @importFrom stats approx
+##' 
 ##' @examples
 ##' fit <- RenouvTList(Garonne,
 ##'                    threshold = seq(from = 2401, to = 3001, by = 10),
@@ -153,6 +169,9 @@ autoplot.predict.RenouvTList <- function(object,
 ##' autoplot(coef(fit, sd = TRUE))
 ##' autoplot(coef(fitJit))
 ##' autoplot(coef(fitJit, sd = TRUE))
+##' ## when the `lambda` arg of `coef` is FALSE, the number of exceedances
+##' ## is displayed on a second axis.
+##' autoplot(coef(fit, sd = TRUE, lambda = FALSE))
 autoplot.coef.RenouvTList <- function(object,
                                       facets,
                                       ...) {
@@ -168,7 +187,6 @@ autoplot.coef.RenouvTList <- function(object,
         g <- g + geom_point(mapping = aes(x = Threshold, y = Value, group = Param))
         g <- g + geom_line(mapping = aes(x = Threshold, y = Value, group = Param))
         g <- g + facet_grid(Param ~ ., scales="free_y", labeller = label_both)
-        g
     } else {
         dfSigma <- data.frame(Threshold = attr(object, "threshold"),
                               attr(object, "sigma"))
@@ -186,8 +204,27 @@ autoplot.coef.RenouvTList <- function(object,
         g <- g + geom_point(mapping = aes(x = Threshold, y = Value, group = Param))
         g <- g + geom_line(mapping = aes(x = Threshold, y = Value, group = Param))
         g <- g + facet_grid(Param ~ ., scales="free_y", labeller = label_both)
-        g
     }
+
+    ## If the rate 'lambda' is not stored as a coefficients one shows
+    ## a second axis (top horizontal) displaying the number of
+    ## exceedances.
+    
+    if (!attr(object, "lambda")) {
+        invTrans <- function(n) {
+            stats::approx(xout = n,
+                          x = attr(object, "nb.OT"),
+                          y = attr(object, "threshold"))$y
+        }
+        np <- pretty(attr(object, "nb.OT"))
+        xp <- invTrans(np) 
+        g <- g + scale_x_continuous(sec.axis = sec_axis(trans = \(x) x,
+                                                        breaks =  xp,
+                                                        labels = np,
+                                                        name = "Nb. of exceedances"))
+    }
+    
+    g
 
 }
 

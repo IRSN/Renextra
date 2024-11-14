@@ -53,6 +53,13 @@
 ##'
 ##' @param byBlockStyle As in \code{\link{plot.Renouv}}.
 ##'
+##' @param xlim Optional vector of limits for the horizontal
+##'     axise. This argument is actually passed as the `limits`
+##'     argument of \code{\link[ggplot2]{scale_x_log10}} function.
+##'     Note that the limits of the vertical axis can be set in a
+##'     standard way by using \code{+ ylim()}, see
+##'     \code{\link[ggplot2]{ylim}}.
+##' 
 ##' @param quant.col,conf.col,conf.fill,conf.lty,obs.col,obs.fill,obs.shape
 ##'     Can be used to change or set the graphical parameters such as
 ##'     colours. This remains experimental and some change may occur.
@@ -104,6 +111,7 @@ autoplot.Renouv <- function(object,
                             obs.col = c("black", "orangered", "ForestGreen", "orchid"),
                             obs.fill = c("black", "gold", "Chartreuse", "pink"),
                             obs.shape = c(16, 21, 24, 23),
+                            xlim = NULL,
                             ...) {
     
     Period <- Quantile <- U <- L <- Group <- Level <- NULL
@@ -174,7 +182,7 @@ autoplot.Renouv <- function(object,
     ## =========================================================================
     
     g <- ggplot(data = pred)
-    g <- g + scale_x_log10()
+    g <- g + scale_x_log10(limits = xlim)
     
     if (isTRUE(show$conf)) {
         g <- g + geom_ribbon(data = subset(pred, Level != 0), 

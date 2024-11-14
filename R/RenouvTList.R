@@ -250,6 +250,7 @@ coef.RenouvTList <- function(object, reParam, lambda = TRUE, sd = TRUE, ...) {
     
     attr(est, "threshold") <- attr(object, "threshold")
     attr(est, "nb.OT") <- nb.OT
+    attr(est, "lambda") <- as.logical(lambda)
     
     class(est) <- "coef.RenouvTList"
     est

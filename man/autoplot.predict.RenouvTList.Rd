@@ -5,7 +5,7 @@
 \title{Generate a \code{ggplot} for a \code{predict.RenouvTList}
     Object}
 \usage{
-\method{autoplot}{predict.RenouvTList}(object, confInt = FALSE, facets, ...)
+\method{autoplot}{predict.RenouvTList}(object, confInt = FALSE, facets, xlim = NULL, ...)
 }
 \arguments{
 \item{object}{An object with class \code{"predict.RenouvTList"}.}
@@ -17,6 +17,12 @@ bands will be shown.}
 with its facets corresponding to the thresholds. This option
 is useful when the number of thresholds is moderate, say
 \eqn{\leq 12}.}
+
+\item{xlim}{An optional vector of limits for the horizontal
+axis. This argument is actually passed as the `limits`
+argument of \code{\link[ggplot2]{scale_x_log10}}
+function. Note that the limits of the vertical axis can be set
+in a standard way by using \code{+ ylim()}.}
 
 \item{...}{Not used yet}
 }
