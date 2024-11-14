@@ -22,7 +22,8 @@ is useful when the number of thresholds is moderate, say
 axis. This argument is actually passed as the `limits`
 argument of \code{\link[ggplot2]{scale_x_log10}}
 function. Note that the limits of the vertical axis can be set
-in a standard way by using \code{+ ylim()}.}
+in a standard way by using \code{+ ylim()}, see
+\code{\link[ggplot2]{ylim}}.}
 
 \item{...}{Not used yet}
 }
