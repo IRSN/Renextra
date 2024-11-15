@@ -100,6 +100,7 @@ fitJit0 <- RenouvTList(GaronneJit,
                        threshold = seq(from = 2401, to = 3001, by = 50),
                        distname.y = "GPD")
 spy <- cbind(kappa = 1.0, coef(fitJit0, reParam = FALSE))
+spy <- spy[ , c("scale", "shape", "kappa")]
 \dontrun{
 fitJit1 <- RenouvTList(GaronneJit,
                        threshold = seq(from = 2401, to = 3001, by = 50),

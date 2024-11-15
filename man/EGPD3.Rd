@@ -84,5 +84,6 @@ autoplot(predict(fitE))
 \references{
 Iaonnis Papastathopoulos and Jonathan A. Tawn (2013).
 "Extended generalised Pareto models for tail estimation".
-\emph{J. Stat. Plan. Inference}, \bold{143}(3): 131-143.
+\emph{J. Stat. Plan. Inference}, \bold{143}(3): 131-143,
+\doi{https://doi.org/10.1016/j.jspi.2012.07.001}.
 }
