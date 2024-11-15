@@ -4,6 +4,9 @@ linkcolor: blue
 output: github_document
 ---
 
+<!-- badges: start -->
+[![R-cmd-check](https://github.com/yvesdeville/nieve/actions/workflows/check.yml/badge.svg)](https://github.com/yvesdeville/nieve/actions/workflows/check.yml)
+<!-- badges: end -->
 
 ## Goals
 
@@ -32,7 +35,6 @@ The present features of **Renextra** are
  of the `scale` and `shape` parameters obtained by using the `"GPD"`
  distribution can be used along with `kappa = 1.0`, see the examples.
  
- 
 
 ## Installing
 
@@ -59,11 +61,13 @@ The package should soon be available in pre-compiled form (including
 The `GaronneJit` data object is a `Rendata` object derived from the
 `Renouv` object**Renext** by jitterizing the observations 
 
+
 ```{r, message=FALSE, fig.height=4}
 library(Renextra)
 class(GaronneJit)
 autoplot(GaronneJit)
 ```
+
 The object has class `"Rendata"` and describes both so-called *systematic* 
 and *historical* observations. An `autoplot` method is made available for this class by **Renextra**.
 
@@ -99,11 +103,13 @@ as in Papastathopoulos and Tawn (1013).
                      distname.y = "EGPD3")
  autoplot(fitE, show = list(quant = TRUE, allObs= TRUE))
 ```
+
 Note that since a large number of thresholds have been used the color scale 
 is continuous rather than discrete as before.
 
 By autoplotting the coefficients of a `RenouvTList` object we get 
 hints on the threshold stability, especially regarding the shape coefficient.
+
 
 ```{r, message=FALSE, fig.height=4}
  autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
@@ -113,8 +119,10 @@ hints on the threshold stability, especially regarding the shape coefficient.
 ## References 
  
 Davison A.C. and Smith R.L. (1990) "Models for Exceedances over High Thresholds"
-  *J.R. Statist. Soc. B* (**52**) pp. 393-442.
+  *J.R. Statist. Soc. B* (**52**) pp. 393-442,
+  [doi](https://doi.org/10.1111/j.2517-6161.1990.tb01796.x).
  
 Papastathopoulos I. and Tawn J.A. (2013) "Extended Generalized Pareto
     Models for Tail Estimation", *Journal of Statistical
-    Planning and Inference* (**143**), pp. 131-143.
+    Planning and Inference* (**143**), pp. 131-143, 
+	[doi](https://doi.org/10.1016/j.jspi.2012.07.001).

@@ -1,6 +1,11 @@
 R package Renextra
 ================
 
+<!-- badges: start -->
+
+[![R-cmd-check](https://github.com/yvesdeville/nieve/actions/workflows/check.yml/badge.svg)](https://github.com/yvesdeville/nieve/actions/workflows/check.yml)
+<!-- badges: end -->
+
 ## Goals
 
 The **Renextra** R package has been financed by IRSN Behrig. It aims at
@@ -63,10 +68,11 @@ class(GaronneJit)
 autoplot(GaronneJit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- --> The object
-has class `"Rendata"` and describes both so-called *systematic* and
-*historical* observations. An `autoplot` method is made available for
-this class by **Renextra**.
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+
+The object has class `"Rendata"` and describes both so-called
+*systematic* and *historical* observations. An `autoplot` method is made
+available for this class by **Renextra**.
 
 When the object is used as the first argument of `Renouv` all the
 observations are used in the fit. **Renextra** adds an `autoplot` method
@@ -108,14 +114,14 @@ Generalized Pareto as in Papastathopoulos and Tawn (1013).
     ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
     ## o Kolmogorov-Smirnov test
     ##           n      D p.value
-    ## u =  70 138 0.0749  0.4205
-    ## u =  80  86 0.0536  0.9545
-    ## u =  90  57 0.0747  0.8842
-    ## u = 100  39 0.1004  0.7901
-    ## u = 110  31 0.0990  0.8927
-    ## u = 120  24 0.1079  0.9147
-    ## u = 130  22 0.1141  0.9061
-    ## u = 140  18 0.1424  0.8099
+    ## u =  70 138 0.0750  0.4190
+    ## u =  80  86 0.0536  0.9546
+    ## u =  90  57 0.0751  0.8811
+    ## u = 100  39 0.1012  0.7823
+    ## u = 110  31 0.0994  0.8899
+    ## u = 120  24 0.1079  0.9148
+    ## u = 130  22 0.1138  0.9076
+    ## u = 140  18 0.1405  0.8222
 
 ``` r
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))
@@ -133,9 +139,10 @@ Generalized Pareto as in Papastathopoulos and Tawn (1013).
  autoplot(fitE, show = list(quant = TRUE, allObs= TRUE))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- --> Note that
-since a large number of thresholds have been used the color scale is
-continuous rather than discrete as before.
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+
+Note that since a large number of thresholds have been used the color
+scale is continuous rather than discrete as before.
 
 By autoplotting the coefficients of a `RenouvTList` object we get hints
 on the threshold stability, especially regarding the shape coefficient.
@@ -144,13 +151,18 @@ on the threshold stability, especially regarding the shape coefficient.
  autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
 ```
 
+    ## Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+    ## suppression des ex-aequos de 'x'
+
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ## References
 
 Davison A.C. and Smith R.L. (1990) “Models for Exceedances over High
-Thresholds” *J.R. Statist. Soc. B* (**52**) pp. 393-442.
+Thresholds” *J.R. Statist. Soc. B* (**52**) pp. 393-442,
+[doi](https://doi.org/10.1111/j.2517-6161.1990.tb01796.x).
 
 Papastathopoulos I. and Tawn J.A. (2013) “Extended Generalized Pareto
 Models for Tail Estimation”, *Journal of Statistical Planning and
-Inference* (**143**), pp. 131-143.
+Inference* (**143**), pp. 131-143,
+[doi](https://doi.org/10.1016/j.jspi.2012.07.001).
