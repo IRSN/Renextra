@@ -1,7 +1,7 @@
 Package: Renextra
 Type: Package
 Title: Extra Functions and Objects for Renext
-Version: 0.1.2
+Version: 0.1.3
 Author: Yves Deville
 Maintainer: Yves Deville <deville.yves@alpestat.com>
 Description: Extra functions, methods and and objects to be used with
