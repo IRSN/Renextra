@@ -8,6 +8,15 @@ output: github_document
 [![R-cmd-check](https://github.com/yvesdeville/nieve/actions/workflows/check.yml/badge.svg)](https://github.com/yvesdeville/nieve/actions/workflows/check.yml)
 <!-- badges: end -->
 
+```{r, echo=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-"
+)
+```
+
+
 ## Goals
 
 The **Renextra** R package has been financed by IRSN Behrig. It aims

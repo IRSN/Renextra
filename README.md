@@ -60,15 +60,11 @@ The `GaronneJit` data object is a `Rendata` object derived from the
 ``` r
 library(Renextra)
 class(GaronneJit)
-```
-
-    ## [1] "Rendata"
-
-``` r
+#> [1] "Rendata"
 autoplot(GaronneJit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
 The object has class `"Rendata"` and describes both so-called
 *systematic* and *historical* observations. An `autoplot` method is made
@@ -83,7 +79,7 @@ fitGJ <- Renouv(GaronneJit, threshold = 3200, distname.y = "GPD", plot = FALSE)
 autoplot(fitGJ)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 ### Nidd River
 
@@ -99,35 +95,31 @@ Generalized Pareto as in Papastathopoulos and Tawn (1013).
                     threshold = seq(from =70, to = 140, by = 10),
                     distname.y = "GPD")
  summary(fit)
-```
-
-    ## RenouvTList object
-    ## o Estimated coefficients
-    ##         lambda         scale ind        shape         
-    ## u =  70  3.943 [0.336] -0.989 [10.104]   0.323 [0.114]
-    ## u =  80  2.457 [0.265] -2.213 [16.772]   0.343 [0.164]
-    ## u =  90  1.629 [0.216] 12.104 [24.891]   0.238 [0.204]
-    ## u = 100  1.114 [0.178] 50.288 [33.156]   0.003 [0.214]
-    ## u = 110  0.886 [0.159] 64.108 [41.456]  -0.070 [0.240]
-    ## u = 120  0.686 [0.140] 101.478 [49.078] -0.249 [0.238]
-    ## u = 130  0.629 [0.134] 77.930 [57.890]  -0.142 [0.294]
-    ## u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
-    ## o Kolmogorov-Smirnov test
-    ##           n      D p.value
-    ## u =  70 138 0.0750  0.4190
-    ## u =  80  86 0.0536  0.9546
-    ## u =  90  57 0.0751  0.8811
-    ## u = 100  39 0.1012  0.7823
-    ## u = 110  31 0.0994  0.8899
-    ## u = 120  24 0.1079  0.9148
-    ## u = 130  22 0.1138  0.9076
-    ## u = 140  18 0.1405  0.8222
-
-``` r
+#> RenouvTList object
+#> o Estimated coefficients
+#>         lambda         scale ind        shape         
+#> u =  70  3.943 [0.336] -0.989 [10.104]   0.323 [0.114]
+#> u =  80  2.457 [0.265] -2.213 [16.772]   0.343 [0.164]
+#> u =  90  1.629 [0.216] 12.104 [24.891]   0.238 [0.204]
+#> u = 100  1.114 [0.178] 50.288 [33.156]   0.003 [0.214]
+#> u = 110  0.886 [0.159] 64.108 [41.456]  -0.070 [0.240]
+#> u = 120  0.686 [0.140] 101.478 [49.078] -0.249 [0.238]
+#> u = 130  0.629 [0.134] 77.930 [57.890]  -0.142 [0.294]
+#> u = 140  0.514 [0.121] 98.568 [69.280]  -0.236 [0.322]
+#> o Kolmogorov-Smirnov test
+#>           n      D p.value
+#> u =  70 138 0.0749  0.4205
+#> u =  80  86 0.0536  0.9546
+#> u =  90  57 0.0750  0.8821
+#> u = 100  39 0.1014  0.7799
+#> u = 110  31 0.0986  0.8951
+#> u = 120  24 0.1075  0.9166
+#> u = 130  22 0.1142  0.9057
+#> u = 140  18 0.1406  0.8217
  autoplot(fit, show = list(quant = TRUE, allObs= TRUE))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
  ## Threshold Stability with ECGPD3
@@ -139,7 +131,7 @@ Generalized Pareto as in Papastathopoulos and Tawn (1013).
  autoplot(fitE, show = list(quant = TRUE, allObs= TRUE))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-2.png)<!-- -->
 
 Note that since a large number of thresholds have been used the color
 scale is continuous rather than discrete as before.
@@ -149,12 +141,11 @@ on the threshold stability, especially regarding the shape coefficient.
 
 ``` r
  autoplot(coef(fitE, lambda = FALSE, sd = TRUE))
+#> Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+#> suppression des ex-aequos de 'x'
 ```
 
-    ## Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
-    ## suppression des ex-aequos de 'x'
-
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
 
 ## References
 
